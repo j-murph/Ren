@@ -398,7 +398,7 @@ struct Matrix4x4
 
 	Vertex4d<T> operator*(const Vertex4d<T>& vert) const
 	{
-		Vertex4d<T> temp
+		Vertex4d<T> temp;
 		temp.x = (a[0][0] * vert.x) + (a[1][0] * vert.y) + (a[2][0] * vert.z) + (a[3][0] * vert.w);
 		temp.y = (a[0][1] * vert.x) + (a[1][1] * vert.y) + (a[2][1] * vert.z) + (a[3][1] * vert.w);
 		temp.z = (a[0][2] * vert.x) + (a[1][2] * vert.y) + (a[2][2] * vert.z) + (a[3][2] * vert.w);
