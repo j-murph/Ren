@@ -26,7 +26,7 @@ float Timer::Elapsed()
 	LARGE_INTEGER current;
 	if (!QueryPerformanceCounter(&current))
 	{
-		_ASSERT_EXPR(false, "QueryPerformanceCounter() failed.");
+		_ASSERT_EXPR(false, TEXT("QueryPerformanceCounter() failed."));
 	}
 
 	return static_cast<float>(current.QuadPart - lastUpdate.QuadPart) / frequency.QuadPart;
