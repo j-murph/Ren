@@ -14,8 +14,6 @@ void SceneRenderer::RenderScene(const SRGraphicsContext& gfx)
 {
 	_ASSERT_EXPR(camera != nullptr, TEXT("Camera must be set."));
 
-	if (!camera) return;
-
 	rasterizer->SetRasterizerMode(RasterizerMode::Wireframe);
 
 	for (RenderObject*& object : renderObjects)
@@ -55,7 +53,7 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 		Vert4df p1 = Vert4df(tri.p1, 1), p2 = Vert4df(tri.p2, 1), p3 = Vert4df(tri.p3, 1);
 
 		// Get raster space coordinates
-		//Vert4df p1c = pvm * p1, p2c = pvm * p2, p3c = pvm * p3;
+		//Vert4df p1c = pvm * p1, p2c = pvm * p2, p3c = pvm * p3; TODO: This should work instead of individual mult's below
 		Vert4df p1c = worldMatrix * p1, p2c = worldMatrix * p2, p3c = worldMatrix * p3;
 
 		p1c = viewMatrix * p1c;
