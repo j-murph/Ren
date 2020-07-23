@@ -112,10 +112,6 @@ float Camera::GetFarPlane()
 	return farPlane;
 }
 
-#define _XM_NO_INTRINSICS_
-#include <windows.graphics.directx.h>
-#include <DirectXMath.h>
-
 void Camera::LookAt(const Vert3df& at, Vec3df up)
 {
 	Vert3df from(-viewMatrix(3, 0), -viewMatrix(3, 1), -viewMatrix(3, 2));
@@ -140,12 +136,6 @@ void Camera::LookAt(const Vert3df& at, Vec3df up)
 	viewMatrix(3, 1) = -yAxis.Dot((Vec3df)from);
 	viewMatrix(3, 2) = -zAxis.Dot((Vec3df)from);
 	viewMatrix(3, 3) = 1.0f;
-
-	DirectX::FXMVECTOR e = { from.x, from.y, from.z };
-	DirectX::FXMVECTOR a = { at.x, at.y, at.z };
-
-	//auto t = DirectX::XMMatrixLookAtLH(e, a, DirectX::FXMVECTOR{ 0, 1, 0 });
-	//memcpy(&viewMatrix, &t, sizeof(t));
 }
 
 void Camera::UpdateProjectionMatrix()
@@ -161,7 +151,4 @@ void Camera::UpdateProjectionMatrix()
 	projectionMatrix(2, 2) = (-nearPlane - farPlane) / zRange;
 	projectionMatrix(2, 3) = 1;
 	projectionMatrix(3, 2) = (2 * nearPlane * farPlane) / zRange;
-
-	//auto dxm = DirectX::XMMatrixPerspectiveFovLH(fov, aspectRatio, nearPlane, farPlane);
-	//memcpy(projectionMatrix.a, &dxm, sizeof(float) * 4 * 4);
 }
