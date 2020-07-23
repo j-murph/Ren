@@ -1,1 +1,1 @@
-# Ren
+# Ren (Software renderer)
