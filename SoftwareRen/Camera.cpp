@@ -114,7 +114,6 @@ float Camera::GetFarPlane()
 
 void Camera::LookAt(const Vert3df& at, Vec3df up)
 {
-	//Vert3df from(-viewMatrix(3, 0), -viewMatrix(3, 1), -viewMatrix(3, 2));
 	Vert3df from(viewMatrix(3, 0), viewMatrix(3, 1), viewMatrix(3, 2));
 
 	auto zAxis = (at - from).Normalize();
@@ -133,9 +132,9 @@ void Camera::LookAt(const Vert3df& at, Vec3df up)
 	viewMatrix(2, 1) = yAxis.z;
 	viewMatrix(2, 2) = zAxis.z;
 	viewMatrix(2, 3) = 0.0f;
-	viewMatrix(3, 0) = xAxis.Dot((Vec3df)from);
-	viewMatrix(3, 1) = yAxis.Dot((Vec3df)from);
-	viewMatrix(3, 2) = zAxis.Dot((Vec3df)from);
+	viewMatrix(3, 0) = -xAxis.Dot((Vec3df)from);
+	viewMatrix(3, 1) = -yAxis.Dot((Vec3df)from);
+	viewMatrix(3, 2) = -zAxis.Dot((Vec3df)from);
 	viewMatrix(3, 3) = 1.0f;
 }
 
