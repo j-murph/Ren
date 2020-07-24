@@ -14,4 +14,6 @@ public:
 	std::vector<Tri3df>& GetTriangles();
 
 	bool LoadFromFile(const std::string& filename);
+
+	void CreateCube(float size);
 };

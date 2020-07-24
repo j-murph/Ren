@@ -149,6 +149,6 @@ void Camera::UpdateProjectionMatrix()
 	projectionMatrix(0, 0) = 1.0f / (tanHalfFOV * aspectRatio);
 	projectionMatrix(1, 1) = 1.0f / tanHalfFOV;
 	projectionMatrix(2, 2) = (-nearPlane - farPlane) / zRange;
-	projectionMatrix(2, 3) = 1;
+	projectionMatrix(2, 3) = 1; // Left handed, invert for right handed
 	projectionMatrix(3, 2) = (2 * nearPlane * farPlane) / zRange;
 }
