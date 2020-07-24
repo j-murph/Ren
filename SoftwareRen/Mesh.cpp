@@ -32,8 +32,7 @@ bool Mesh::LoadFromFile(const std::string& filename)
 	std::string line;
 	while (std::getline(file, line))
 	{
-		if (line.length() == 0) continue;
-		if (line[0] == OBJ_COMMENT_CHAR) continue;
+		if (line.length() == 0 || line[0] == OBJ_COMMENT_CHAR) continue;
 
 		tkn.TokenizeString(line, OBJ_WHITESPACE_CHAR);
 
