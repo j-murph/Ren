@@ -27,7 +27,7 @@ void SceneRenderer::RenderScene(const SRGraphicsContext& gfx)
 	}
 }
 
-void SceneRenderer::SetCamera(Camera * camera)
+void SceneRenderer::SetCamera(Camera* camera)
 {
 	this->camera = camera;
 }
@@ -44,8 +44,8 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 	const Mat4x4f& projectionMatrix = camera->GetProjectionMatrix();
 	const Mat4x4f& pvm = projectionMatrix * viewMatrix * worldMatrix;
 
-	const float screenWidth = gfx.frameBuffer->GetWidth();
-	const float screenHeight = gfx.frameBuffer->GetHeight();
+	const float screenWidth = static_cast<float>(gfx.frameBuffer->GetWidth());
+	const float screenHeight = static_cast<float>(gfx.frameBuffer->GetHeight());
 
 	Tri2di rasterTri;
 	for (Tri3df& tri : mesh.GetTriangles())
@@ -68,16 +68,16 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 		p2c.DivideByW();
 		p3c.DivideByW();
 
-		rasterTri.p1.x = (p1c.x + 1.0f) / 2.0f * screenWidth;
-		rasterTri.p1.y = (p1c.y + 1.0f) / 2.0f * screenHeight;
+		rasterTri.p1.x = static_cast<int>((p1c.x + 1.0f) / 2.0f * screenWidth);
+		rasterTri.p1.y = static_cast<int>((p1c.y + 1.0f) / 2.0f * screenHeight);
 		//rasterTri.p1.z = p1c.z;
 
-		rasterTri.p2.x = (p2c.x + 1.0f) / 2.0f * screenWidth;
-		rasterTri.p2.y = (p2c.y + 1.0f) / 2.0f * screenHeight;
+		rasterTri.p2.x = static_cast<int>((p2c.x + 1.0f) / 2.0f * screenWidth);
+		rasterTri.p2.y = static_cast<int>((p2c.y + 1.0f) / 2.0f * screenHeight);
 		//rasterTri.p2.z = p2c.z;
 
-		rasterTri.p3.x = (p3c.x + 1.0f) / 2.0f * screenWidth;
-		rasterTri.p3.y = (p3c.y + 1.0f) / 2.0f * screenHeight;
+		rasterTri.p3.x = static_cast<int>((p3c.x + 1.0f) / 2.0f * screenWidth);
+		rasterTri.p3.y = static_cast<int>((p3c.y + 1.0f) / 2.0f * screenHeight);
 		//rasterTri.p3.z = p3c.z;
 
 		rasterizer->DrawTriangle(rasterTri, gfx);
