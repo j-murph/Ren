@@ -1,7 +1,10 @@
 #include "stdafx.h"
 #include "Mesh.h"
+#include "Tokenizer.h"
 #include <string>
 #include <fstream>
+
+#define OBJ_COMMENT '#'
 
 RenderObjectType Mesh::GetType()
 {
@@ -15,19 +18,21 @@ std::vector<Tri3df>& Mesh::GetTriangles()
 
 bool Mesh::LoadFromFile(const std::string& filename)
 {
-	return true;
+	// .obj supported for now
 	std::fstream file(filename.c_str(), std::fstream::in);
 	if (!file.is_open()) return false;
 
+	Tokenizer<char> tkn;
 	std::string line;
 	while (std::getline(file, line))
 	{
 		if (line.length() == 0) continue;
-		if (line[0] == '#') continue; // Comment, ignore
-		std::string a1;
+		if (line[0] == OBJ_COMMENT) continue;
+
+		tkn.Clear();
 	}
 
-	return false;
+	return true;
 }
 
 void Mesh::CreateCube(float size, const Vert3df& origin)
