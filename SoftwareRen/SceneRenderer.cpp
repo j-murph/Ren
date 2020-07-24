@@ -42,7 +42,7 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 	const Mat4x4f& worldMatrix = mesh.GetWorldMatrix();
 	const Mat4x4f& viewMatrix = camera->GetViewMatrix();
 	const Mat4x4f& projectionMatrix = camera->GetProjectionMatrix();
-	const Mat4x4f& pvm = projectionMatrix * viewMatrix * worldMatrix;
+	const Mat4x4f& pvm = worldMatrix * viewMatrix * projectionMatrix;
 
 	const float screenWidth = static_cast<float>(gfx.frameBuffer->GetWidth());
 	const float screenHeight = static_cast<float>(gfx.frameBuffer->GetHeight());
@@ -53,16 +53,7 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 		Vert4df p1 = Vert4df(tri.p1, 1), p2 = Vert4df(tri.p2, 1), p3 = Vert4df(tri.p3, 1);
 
 		// Get raster space coordinates
-		//Vert4df p1c = pvm * p1, p2c = pvm * p2, p3c = pvm * p3; TODO: This should work instead of individual mult's below
-		Vert4df p1c = worldMatrix * p1, p2c = worldMatrix * p2, p3c = worldMatrix * p3;
-
-		p1c = viewMatrix * p1c;
-		p2c = viewMatrix * p2c;
-		p3c = viewMatrix * p3c;
-
-		p1c = projectionMatrix * p1c;
-		p2c = projectionMatrix * p2c;
-		p3c = projectionMatrix * p3c;
+		Vert4df p1c = pvm * p1, p2c = pvm * p2, p3c = pvm * p3;
 		
 		p1c.DivideByW();
 		p2c.DivideByW();

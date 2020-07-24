@@ -272,6 +272,11 @@ struct Matrix4x4
 		a[0][0] = 0;
 	}
 
+	Matrix4x4(const Matrix4x4<T>& other)
+	{
+		memcpy(a, other.a, sizeof(T) * 4 * 4);
+	}
+
 	void Zero()
 	{
 		ZeroMemory(this->a, sizeof(T) * 4 * 4);
@@ -376,6 +381,7 @@ struct Matrix4x4
 	Matrix4x4<T> operator*(const Matrix4x4<T>& other) const
 	{
 		const Matrix4x4<T>& o = other;
+
 		Matrix4x4<T> temp;
 		temp.a[0][0] = a[0][0] * o.a[0][0] + a[0][1] * o.a[1][0] + a[0][2] * o.a[2][0] + a[0][3] * o.a[3][0];
 		temp.a[0][1] = a[0][0] * o.a[0][1] + a[0][1] * o.a[1][1] + a[0][2] * o.a[2][1] + a[0][3] * o.a[3][1];
@@ -446,4 +452,9 @@ template <class T, class Y = float, class R = T>
 T Lerp(T x, T y, Y t)
 {
 	return static_cast<R>(x + t * (y - x));
+}
+
+bool FloatEquals(float a, float b, float epsilon = 0.000001f)
+{
+	return fabs(a - b) <= epsilon;
 }
