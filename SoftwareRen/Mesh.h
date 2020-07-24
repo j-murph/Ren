@@ -15,5 +15,5 @@ public:
 
 	bool LoadFromFile(const std::string& filename);
 
-	void CreateCube(float size);
+	void CreateCube(float size, const Vert3df& origin = { 0, 0, 0 });
 };

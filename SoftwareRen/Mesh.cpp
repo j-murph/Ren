@@ -30,17 +30,17 @@ bool Mesh::LoadFromFile(const std::string& filename)
 	return false;
 }
 
-void Mesh::CreateCube(float size)
+void Mesh::CreateCube(float size, const Vert3df& origin)
 {
 	const Vert3df
-		topBackLeft      = { -size,  size,  size },
-		topBackRight     = { size,  size,  size },
-		bottomBackLeft   = { -size, -size,  size },
-		bottomBackRight  = { size, -size,  size },
-		topFrontLeft     = { -size,  size, -size },
-		topFrontRight    = { size,  size, -size },
-		bottomFrontLeft  = { -size, -size, -size },
-		bottomFrontRight = { size, -size, -size };
+		topBackLeft      = { -size + origin.x,  size + origin.y,  size + origin.z },
+		topBackRight     = {  size + origin.x,  size + origin.y,  size + origin.z },
+		bottomBackLeft   = { -size + origin.x, -size + origin.y,  size + origin.z },
+		bottomBackRight  = {  size + origin.x, -size + origin.y,  size + origin.z },
+		topFrontLeft     = { -size + origin.x,  size + origin.y, -size + origin.z },
+		topFrontRight    = {  size + origin.x,  size + origin.y, -size + origin.z },
+		bottomFrontLeft  = { -size + origin.x, -size + origin.y, -size + origin.z },
+		bottomFrontRight = {  size + origin.x, -size + origin.y, -size + origin.z };
 
 	auto& triangles = GetTriangles();
 
