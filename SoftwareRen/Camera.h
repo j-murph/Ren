@@ -23,7 +23,7 @@ public:
 	const Mat4x4f& GetProjectionMatrix();
 
 	void SetPosition(const Vert3df& position);
-	const Vert3df GetPosition();
+	Vert3df GetPosition();
 
 	void SetRotationX(float angle);
 	float GetRotationX();

@@ -24,7 +24,7 @@ void Camera::SetPosition(const Vert3df& position)
 	viewMatrix.SetTranslation(position);
 }
 
-const Vert3df Camera::GetPosition()
+Vert3df Camera::GetPosition()
 {
 	return viewMatrix.GetTranslation();
 }

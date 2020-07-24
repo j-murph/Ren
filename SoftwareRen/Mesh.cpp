@@ -4,7 +4,11 @@
 #include <string>
 #include <fstream>
 
-#define OBJ_COMMENT '#'
+#define OBJ_COMMENT_CHAR '#'
+#define OBJ_WHITESPACE_CHAR ' '
+#define OBJ_VERTEX_STR "v"
+#define OBJ_FACE_STR "f"
+#define OBJ_FACE_SEPARATOR_CHAR '/'
 
 RenderObjectType Mesh::GetType()
 {
@@ -22,12 +26,57 @@ bool Mesh::LoadFromFile(const std::string& filename)
 	std::fstream file(filename.c_str(), std::fstream::in);
 	if (!file.is_open()) return false;
 
-	Tokenizer<char> tkn;
+	std::vector<Vert3df> vertices;
+
+	Tokenizer<char> tkn(true);
 	std::string line;
 	while (std::getline(file, line))
 	{
 		if (line.length() == 0) continue;
-		if (line[0] == OBJ_COMMENT) continue;
+		if (line[0] == OBJ_COMMENT_CHAR) continue;
+
+		tkn.TokenizeString(line, OBJ_WHITESPACE_CHAR);
+
+		try
+		{
+			const std::string& spec = tkn[0];
+
+			if (spec == OBJ_VERTEX_STR)
+			{
+				vertices.push_back({
+					tkn.ParseToken<float>(1),
+					tkn.ParseToken<float>(2),
+					tkn.ParseToken<float>(3) });
+			}
+			else if (spec == OBJ_FACE_STR)
+			{
+				Tokenizer<char> faceTkn(true);
+
+				Tri3df triTemp;
+				for (int i = 0; i < 3; i++)
+				{
+					faceTkn.TokenizeString(tkn[i + 1], OBJ_FACE_SEPARATOR_CHAR);
+
+					const int vertIndex = faceTkn.ParseToken<int>(0);
+					Vert3df vertex = vertices.at(vertIndex - 1);
+
+					faceTkn.Clear();
+
+					if (i == 0)
+						triTemp.p1 = vertex;
+					else if (i == 1)
+						triTemp.p2 = vertex;
+					else if (i == 2)
+						triTemp.p3 = vertex;
+				}
+				
+				triangles.push_back(triTemp);
+			}
+		}
+		catch (const std::exception& ex)
+		{
+			return false;
+		}
 
 		tkn.Clear();
 	}
