@@ -72,7 +72,7 @@ bool Mesh::LoadFromFile(const std::string& filename)
 				triangles.push_back(triTemp);
 			}
 		}
-		catch (const std::exception& ex)
+		catch (const std::exception&)
 		{
 			return false;
 		}
