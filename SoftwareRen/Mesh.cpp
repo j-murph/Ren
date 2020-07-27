@@ -98,26 +98,26 @@ void Mesh::CreateCube(float size, const Vert3df& origin)
 	auto& triangles = GetTriangles();
 
 	// Back face
-	triangles.push_back(Tri3df(topBackLeft, topBackRight, bottomBackLeft));
+	triangles.push_back(Tri3df(topBackLeft, bottomBackLeft, topBackRight));
 	triangles.push_back(Tri3df(topBackRight, bottomBackLeft, bottomBackRight));
 
 	// Front face
 	triangles.push_back(Tri3df(topFrontLeft, topFrontRight, bottomFrontLeft));
-	triangles.push_back(Tri3df(topFrontRight, bottomFrontLeft, bottomFrontRight));
+	triangles.push_back(Tri3df(topFrontRight, bottomFrontRight, bottomFrontLeft));
 
 	// Left face
-	triangles.push_back(Tri3df(bottomFrontLeft, topFrontLeft, topBackLeft));
-	triangles.push_back(Tri3df(bottomFrontLeft, bottomBackLeft, topBackLeft));
+	triangles.push_back(Tri3df(topBackLeft, topFrontLeft, bottomFrontLeft));
+	triangles.push_back(Tri3df(topBackLeft, bottomFrontLeft, bottomBackLeft));
 
 	// Right face
 	triangles.push_back(Tri3df(bottomFrontRight, topFrontRight, topBackRight));
-	triangles.push_back(Tri3df(bottomFrontRight, bottomBackRight, topBackRight));
+	triangles.push_back(Tri3df(bottomFrontRight, topBackRight, bottomBackRight));
 
 	// Top face
 	triangles.push_back(Tri3df(topFrontLeft, topBackLeft, topBackRight));
 	triangles.push_back(Tri3df(topFrontLeft, topBackRight, topFrontRight));
 
 	// Bottom face
-	triangles.push_back(Tri3df(bottomFrontLeft, bottomBackLeft, bottomBackRight));
-	triangles.push_back(Tri3df(bottomFrontLeft, bottomBackRight, bottomFrontRight));
+	triangles.push_back(Tri3df(bottomFrontLeft, bottomBackRight, bottomBackLeft));
+	triangles.push_back(Tri3df(bottomFrontLeft, bottomFrontRight, bottomBackRight));
 }
