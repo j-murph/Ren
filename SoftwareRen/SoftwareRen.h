@@ -1,5 +1,4 @@
 #pragma once
-
 #include "resource.h"
 #include "GraphicsContext.h"
 #include "Camera.h"

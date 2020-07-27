@@ -197,8 +197,7 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 			UpdateCamera(hwnd, &mainCamera);
 
 			static float inc = 0.0f;
-			inc += 0.5f * g_Timer.GetLockedTime();
-
+			inc += 0.1f * g_Timer.GetLockedTime();
 			mesh.SetRotation({ inc / 2.5f, inc / 2, inc });
 
 			// Start record of the most recent render
@@ -249,6 +248,16 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	if (GetKeyState('D') & keyDownFlag)
 	{
 		camera->SetPosition({ cameraPos.x + -speed, cameraPos.y, cameraPos.z });
+	}
+
+	if (GetKeyState(VK_LCONTROL) & keyDownFlag)
+	{
+		camera->SetPosition({ cameraPos.x, cameraPos.y + speed, cameraPos.z });
+	}
+
+	if (GetKeyState(VK_LSHIFT) & keyDownFlag)
+	{
+		camera->SetPosition({ cameraPos.x, cameraPos.y - speed, cameraPos.z });
 	}
 
 	// Handle mouse movement

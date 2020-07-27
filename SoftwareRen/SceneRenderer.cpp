@@ -40,11 +40,10 @@ Camera* SceneRenderer::GetCamera()
 void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 {
 	const Mat4x4f& worldMatrix = mesh.GetWorldMatrix();
-	const Mat4x4f& viewMatrix = camera->GetViewMatrix();
+	Mat4x4f viewMatrix = camera->GetViewMatrix();
 	const Mat4x4f& projectionMatrix = camera->GetProjectionMatrix();
 
 	const Mat4x4f& wv = worldMatrix * viewMatrix;
-	const Mat4x4f& wvp = wv * projectionMatrix;
 
 	const float screenWidth = static_cast<float>(gfx.frameBuffer->GetWidth());
 	const float screenHeight = static_cast<float>(gfx.frameBuffer->GetHeight());
@@ -52,21 +51,29 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 	Tri2di rasterTri;
 	for (Tri3df& tri : mesh.GetTriangles())
 	{
-		/*if (gfx.options.enableBackfaceCulling && 0)
+		Vert4df p1c = wv * Vert4df(tri.p1, 1),
+				p2c = wv * Vert4df(tri.p2, 1),
+				p3c = wv * Vert4df(tri.p3, 1);
+
+		if (gfx.options.cullBackfaces)
 		{
-			Vec3df vecLookDirection = { vm(2, 0), vm(2, 1), vm(2, 2) };
-			Vec3df vec = Vec3df(vm.GetTranslation()) + vecLookDirection;
+			Tri3df worldTri = { p1c.x, p1c.y, p1c.z, p2c.x, p2c.y, p2c.z, p3c.x, p3c.y, p3c.z };
 
-			if (vec.Dot(tri.GetNormal()) < 0.f)
+			Vec3df vecLookDirection = { viewMatrix(2, 0), viewMatrix(2, 1), viewMatrix(2, 2) };
+			vecLookDirection = worldTri.GetCenter() - vecLookDirection;
+
+			if (vecLookDirection.Dot(worldTri.GetNormal()) > 0.f)
+			{
+				//DebugDrawNormal(tri, worldMatrix, gfx);
 				continue;
-		}*/
+			}
+		}
 
-		DebugDrawNormal(tri, worldMatrix, gfx);
+		//DebugDrawNormal(tri, worldMatrix, gfx);
 
-		Vert4df p1 = Vert4df(tri.p1, 1), p2 = Vert4df(tri.p2, 1), p3 = Vert4df(tri.p3, 1);
-
-		// Get raster space coordinates
-		Vert4df p1c = wvp * p1, p2c = wvp * p2, p3c = wvp * p3;
+		p1c = projectionMatrix * p1c;
+		p2c = projectionMatrix * p2c;
+		p3c = projectionMatrix * p3c;
 		
 		p1c.DivideByW();
 		p2c.DivideByW();
@@ -90,13 +97,14 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 
 void SceneRenderer::DebugDrawNormal(const Tri3df& tri, const Mat4x4f& worldMatrix, const SRGraphicsContext& gfx)
 {
-	Vert4df p1 = Vert4df(tri.p1, 1), p2 = Vert4df(tri.p2, 1), p3 = Vert4df(tri.p3, 1);
-	Vert4df p1m = worldMatrix * p1, p2m = worldMatrix * p2, p3m = worldMatrix * p3;
+	Vert4df p1m = worldMatrix * Vert4df(tri.p1, 1),
+			p2m = worldMatrix * Vert4df(tri.p2, 1),
+			p3m = worldMatrix * Vert4df(tri.p3, 1);
 
 	Tri3df worldTri = { p1m.x, p1m.y, p1m.z, p2m.x, p2m.y, p2m.z, p3m.x, p3m.y, p3m.z };
 
 	Vert3df vertCenterPoint = worldTri.GetCenter();
-	Vert3df normalOffset = worldTri.GetNormal() * .1f;
+	Vert3df normalOffset = worldTri.GetNormal() * .02f;
 	Vert3df vertEndPoint = vertCenterPoint + normalOffset;
 
 	DebugDrawLine(vertCenterPoint, vertEndPoint, gfx);

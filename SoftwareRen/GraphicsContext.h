@@ -10,13 +10,13 @@ struct SRGraphicsContext
 
 	struct
 	{
-		bool enableBackfaceCulling;
+		bool cullBackfaces;
 	} options;
 
 	SRGraphicsContext(HWND targetWindow) : frameBuffer(new Framebuffer),
 		zBuffer(new ZBuffer), targetWindow(targetWindow)
 	{
-		options.enableBackfaceCulling = true;
+		options.cullBackfaces = true;
 	}
 
 	~SRGraphicsContext()
