@@ -155,14 +155,13 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SOFTWAREREN));
 
 	Mesh mesh;
-	mesh.CreateCube(1.2f);
 	bool meshLoaded = mesh.LoadFromFile("..\\Assets\\Models\\monkey2.obj");
 	_ASSERT_EXPR(meshLoaded, TEXT("Failed to load mesh"));
 
 	mesh.SetPosition({ 0, 0, 2 });
 	pSceneRenderer->AddObjectToScene(&mesh);
 
-	mainCamera.SetPosition({ 0, 0, 10 });
+	mainCamera.SetPosition({ 0, 0, 5 });
 	mainCamera.LookAt({ 0, 0, 0 });
 
 	pSceneRenderer->SetCamera(&mainCamera);

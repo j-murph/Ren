@@ -3,6 +3,7 @@
 
 #define PI 3.14159265358f
 #define DEG_TO_RAD(deg) ((deg * PI) / 180.0f)
+#define TWO_THIRDSF (2.0 / 3.0f)
 
 template <class T>
 struct Vector3d;
@@ -71,9 +72,26 @@ struct Vertex3d
 		this->z = z;
 	}
 
+	Vertex3d(const Vector3d<T>& vec)
+	{
+		x = vec.x;
+		y = vec.y;
+		z = vec.z;
+	}
+
+	Vector3d<T> operator+(const Vertex3d<T>& other) const
+	{
+		return Vector3d<T>(x + other.x, y + other.y, z + other.z);
+	}
+
 	Vector3d<T> operator-(const Vertex3d<T>& other) const
 	{
 		return Vector3d<T>(x - other.x, y - other.y, z - other.z);
+	}
+
+	Vector3d<T> operator*(const T& scalar) const
+	{
+		return Vector3d<T>(x * scalar, y * scalar, x * scalar);
 	}
 };
 
@@ -111,11 +129,6 @@ struct Vertex4d
 			z /= w;
 		}
 	}
-
-	Vertex3d<T> operator-(const Vertex3d<T>& other) const
-	{
-		return Vertex3d<T>(x - other.x, y - other.y, z - other.z);
-	}
 };
 
 template <class T>
@@ -147,6 +160,30 @@ struct Triangle3d
 		p3.x = p3x;
 		p3.y = p3y;
 		p3.z = p3z;
+	}
+
+	Vector3d<T> GetNormal()
+	{
+		return Vector3d<T>({ p2.x - p1.x, p2.z - p1.z, p2.z - p1.z })
+			.Cross({ p3.x - p2.x, p3.z - p2.z, p3.z - p2.z })
+			.Normalize();
+	}
+
+	Vertex3d<T> GetCenter()
+	{
+		Vertex3d<T> edgeCenter;
+		edgeCenter.x = Lerp(p1.x, p2.x, .5f);
+		edgeCenter.y = Lerp(p1.y, p2.y, .5f);
+		edgeCenter.z = Lerp(p1.z, p2.z, .5f);
+
+		Vertex3d<T> centerPoint = 
+		{
+			Lerp(p3.x, edgeCenter.x, TWO_THIRDSF),
+			Lerp(p3.y, edgeCenter.y, TWO_THIRDSF),
+			Lerp(p3.z, edgeCenter.z, TWO_THIRDSF)
+		};
+
+		return centerPoint;
 	}
 };
 
@@ -259,6 +296,21 @@ struct Vector3d
 	T Dot(const Vector3d<T>& other)
 	{
 		return x * other.x + y * other.y + z * other.z;
+	}
+
+	Vector3d<T> operator+(const Vector3d<T>& other) const
+	{
+		return { x + other.x, y + other.y, z + other.z };
+	}
+
+	Vector3d<T> operator-(const Vector3d<T>& other) const
+	{
+		return { x - other.x, y - other.y, z - other.z };
+	}
+
+	Vector3d<T> operator*(const T& sclar) const
+	{
+		return { x * sclar, y * sclar, z * sclar };
 	}
 };
 
