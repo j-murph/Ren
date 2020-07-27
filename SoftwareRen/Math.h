@@ -164,8 +164,8 @@ struct Triangle3d
 
 	Vector3d<T> GetNormal()
 	{
-		return Vector3d<T>({ p2.x - p1.x, p2.z - p1.z, p2.z - p1.z })
-			.Cross({ p3.x - p2.x, p3.z - p2.z, p3.z - p2.z })
+		return Vector3d<T>({ p2.x - p1.x, p2.y - p1.y, p2.z - p1.z })
+			.Cross({ p3.x - p2.x, p3.y - p2.y, p3.z - p2.z })
 			.Normalize();
 	}
 
