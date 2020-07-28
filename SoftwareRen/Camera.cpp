@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Camera.h"
 
-Camera::Camera() : screenWidth(1), screenHeight(1)
+Camera::Camera() : screenWidth(1), screenHeight(1), position(0, 0, 0)
 {
 	viewMatrix.Identity();
 	SetNearPlane(0.1f);
@@ -21,12 +21,13 @@ const Mat4x4f& Camera::GetProjectionMatrix()
 
 void Camera::SetPosition(const Vert3df& position)
 {
-	viewMatrix.SetTranslation(position);
+	this->position = position;
+	LookAt(this->position + GetLookDirection());
 }
 
 Vert3df Camera::GetPosition()
 {
-	return viewMatrix.GetTranslation();
+	return position;
 }
 
 void Camera::SetRotationX(float angle)
@@ -112,9 +113,19 @@ float Camera::GetFarPlane()
 	return farPlane;
 }
 
+Vec3df Camera::GetLookDirection() const
+{
+	return
+	{
+		viewMatrix.a[2][0],
+		viewMatrix.a[2][1],
+		viewMatrix.a[2][2]
+	};
+}
+
 void Camera::LookAt(const Vert3df& at, Vec3df up)
 {
-	Vert3df from(viewMatrix(3, 0), viewMatrix(3, 1), viewMatrix(3, 2));
+	const Vert3df& from = position;
 
 	auto zAxis = (at - from).Normalize();
 	auto xAxis = up.Cross(zAxis).Normalize();

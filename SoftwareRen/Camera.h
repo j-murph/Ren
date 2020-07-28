@@ -7,6 +7,8 @@ private:
 	Mat4x4f viewMatrix;
 	Mat4x4f projectionMatrix;
 
+	Vec3df position;
+
 	float fov;
 	float nearPlane;
 	float farPlane;
@@ -49,5 +51,6 @@ public:
 	void SetFarPlane(float farPlane);
 	float GetFarPlane();
 
+	Vec3df GetLookDirection() const;
 	void LookAt(const Vert3df& at, Vec3df up = Vec3df(0.0f, 1.0f, 0.0f));
 };
