@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Camera.h"
 
-Camera::Camera() : screenWidth(1), screenHeight(1), position(0, 0, 0)
+Camera::Camera() : screenWidth(1), screenHeight(1), position(0, 0, 1), lookAt(0, 0, 0)
 {
 	viewMatrix.Identity();
 	SetNearPlane(0.1f);
@@ -21,8 +21,9 @@ const Mat4x4f& Camera::GetProjectionMatrix()
 
 void Camera::SetPosition(const Vert3df& position)
 {
+	Vec3df diff = this->position - position;
 	this->position = position;
-	LookAt(this->position + GetLookDirection());
+	LookAt(lookAt - diff);
 }
 
 Vert3df Camera::GetPosition()
@@ -125,9 +126,9 @@ Vec3df Camera::GetLookDirection() const
 
 void Camera::LookAt(const Vert3df& at, Vec3df up)
 {
-	const Vert3df& from = position;
+	lookAt = at;
 
-	auto zAxis = (at - from).Normalize();
+	auto zAxis = (lookAt - position).Normalize();
 	auto xAxis = up.Cross(zAxis).Normalize();
 	auto yAxis = zAxis.Cross(xAxis);
 
@@ -143,9 +144,9 @@ void Camera::LookAt(const Vert3df& at, Vec3df up)
 	viewMatrix(2, 1) = yAxis.z;
 	viewMatrix(2, 2) = zAxis.z;
 	viewMatrix(2, 3) = 0.0f;
-	viewMatrix(3, 0) = -xAxis.Dot((Vec3df)from);
-	viewMatrix(3, 1) = -yAxis.Dot((Vec3df)from);
-	viewMatrix(3, 2) = -zAxis.Dot((Vec3df)from);
+	viewMatrix(3, 0) = -xAxis.Dot(position);
+	viewMatrix(3, 1) = -yAxis.Dot(position);
+	viewMatrix(3, 2) = -zAxis.Dot(position);
 	viewMatrix(3, 3) = 1.0f;
 }
 

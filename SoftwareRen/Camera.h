@@ -8,6 +8,7 @@ private:
 	Mat4x4f projectionMatrix;
 
 	Vec3df position;
+	Vec3df lookAt;
 
 	float fov;
 	float nearPlane;
