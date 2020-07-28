@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include <wchar.h>
 #include "SoftwareRen.h"
 #include "Rasterizer.h"
 #include "SceneRenderer.h"
