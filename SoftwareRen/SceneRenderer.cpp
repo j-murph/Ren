@@ -40,10 +40,9 @@ Camera* SceneRenderer::GetCamera()
 void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 {
 	const Mat4x4f& worldMatrix = mesh.GetWorldMatrix();
-	Mat4x4f viewMatrix = camera->GetViewMatrix();
+	const Mat4x4f& viewMatrix = camera->GetViewMatrix();
 	const Mat4x4f& projectionMatrix = camera->GetProjectionMatrix();
-
-	const Mat4x4f& wv = worldMatrix * viewMatrix;
+	const Mat4x4f& vp = viewMatrix * projectionMatrix;
 
 	const float screenWidth = static_cast<float>(gfx.frameBuffer->GetWidth());
 	const float screenHeight = static_cast<float>(gfx.frameBuffer->GetHeight());
@@ -51,29 +50,29 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 	Tri2di rasterTri;
 	for (Tri3df& tri : mesh.GetTriangles())
 	{
-		Vert4df p1c = wv * Vert4df(tri.p1, 1),
-				p2c = wv * Vert4df(tri.p2, 1),
-				p3c = wv * Vert4df(tri.p3, 1);
+		Vert4df p1c = worldMatrix * Vert4df(tri.p1, 1),
+				p2c = worldMatrix * Vert4df(tri.p2, 1),
+				p3c = worldMatrix * Vert4df(tri.p3, 1);
 
 		if (gfx.options.cullBackfaces)
 		{
 			Tri3df worldTri = { p1c.x, p1c.y, p1c.z, p2c.x, p2c.y, p2c.z, p3c.x, p3c.y, p3c.z };
+			Vec3df vecCamToTri = worldTri.GetCenter() - camera->GetPosition();
 
-			Vec3df vecLookDirection = { viewMatrix(2, 0), viewMatrix(2, 1), viewMatrix(2, 2) };
-			vecLookDirection = worldTri.GetCenter() - vecLookDirection;
+			//auto pos = camera->GetPosition();
+			//DebugDrawLine(worldTri.GetCenter(), pos, gfx);
 
-			if (vecLookDirection.Dot(worldTri.GetNormal()) > 0.f)
+			if (vecCamToTri.Dot(worldTri.GetNormal()) >= 0.f)
 			{
-				//DebugDrawNormal(tri, worldMatrix, gfx);
 				continue;
 			}
 		}
 
 		//DebugDrawNormal(tri, worldMatrix, gfx);
 
-		p1c = projectionMatrix * p1c;
-		p2c = projectionMatrix * p2c;
-		p3c = projectionMatrix * p3c;
+		p1c = vp * p1c;
+		p2c = vp * p2c;
+		p3c = vp * p3c;
 		
 		p1c.DivideByW();
 		p2c.DivideByW();
