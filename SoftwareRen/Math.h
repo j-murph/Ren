@@ -93,6 +93,11 @@ struct Vertex3d
 	{
 		return Vector3d<T>(x * scalar, y * scalar, x * scalar);
 	}
+
+	Vertex3d<T> operator-() const
+	{
+		return Vector3d<T>(-x, -y, -z);
+	}
 };
 
 template <class T>
