@@ -118,7 +118,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			{
 				PAINTSTRUCT ps;
 				HDC hdc = BeginPaint(hwnd, &ps);
-				if (pSrgc) pSrgc->frameBuffer->Draw();
+
+				if (pSrgc)
+				{
+					pSrgc->frameBuffer->Draw();
+
+					wchar_t szCameraPos[255] = { 0 };
+					const Vert3df& cameraPos = mainCamera.GetPosition();
+					swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f", cameraPos.x, cameraPos.y, cameraPos.z);
+
+					RECT rectText = { 0, 0, mainCamera.GetScreenWidth(), mainCamera.GetScreenHeight() };
+					DrawText(hdc, szCameraPos, wcslen(szCameraPos), &rectText, 0);
+				}
+
 				EndPaint(hwnd, &ps);
 			}
 			break;
