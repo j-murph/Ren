@@ -8,7 +8,7 @@
 #include "SceneRenderer.h"
 
 #define MAX_LOADSTRING 100
-#define MAX_FPS 120
+#define MAX_FPS 322
 #define MOUSE_SENSITIVITY 2.0f
 
 WCHAR szTitle[MAX_LOADSTRING];
@@ -126,7 +126,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 					wchar_t szCameraPos[255] = { 0 };
 					const Vert3df& cameraPos = mainCamera.GetPosition();
-					swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f", cameraPos.x, cameraPos.y, cameraPos.z);
+					const Vert3df& lookAt = mainCamera.GetLookDirection();
+					swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look at: %f %f %f",
+						cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
 					RECT rectText = { 0, 0, mainCamera.GetScreenWidth(), mainCamera.GetScreenHeight() };
 					DrawText(hdc, szCameraPos, wcslen(szCameraPos), &rectText, 0);
@@ -243,32 +245,38 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	const USHORT keyDownFlag = 1 << 15;
 	const float speed = 2.0f * g_Timer.GetLockedTime();
 
+	// Forward
 	if (GetKeyState('W') & keyDownFlag)
 	{
 		camera->SetPosition({ cameraPos.x, cameraPos.y, cameraPos.z + -speed });
 	}
 
+	// Left
 	if (GetKeyState('A') & keyDownFlag)
 	{
 		camera->SetPosition({ cameraPos.x + speed, cameraPos.y, cameraPos.z });
 	}
 
+	// Right
 	if (GetKeyState('S') & keyDownFlag)
 	{
 		camera->SetPosition({ cameraPos.x, cameraPos.y, cameraPos.z + speed });
 	}
 
+	// Backward
 	if (GetKeyState('D') & keyDownFlag)
 	{
 		camera->SetPosition({ cameraPos.x + -speed, cameraPos.y, cameraPos.z });
 	}
 
-	if (GetKeyState(VK_LCONTROL) & keyDownFlag)
+	// Up
+	if (GetKeyState(VK_LSHIFT) & keyDownFlag)
 	{
 		camera->SetPosition({ cameraPos.x, cameraPos.y + speed, cameraPos.z });
 	}
 
-	if (GetKeyState(VK_LSHIFT) & keyDownFlag)
+	// Down
+	if (GetKeyState(VK_LCONTROL) & keyDownFlag)
 	{
 		camera->SetPosition({ cameraPos.x, cameraPos.y - speed, cameraPos.z });
 	}
