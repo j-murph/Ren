@@ -131,7 +131,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 						cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
 					RECT rectText = { 0, 0, mainCamera.GetScreenWidth(), mainCamera.GetScreenHeight() };
-					DrawText(hdc, szCameraPos, wcslen(szCameraPos), &rectText, 0);
+					//DrawText(hdc, szCameraPos, wcslen(szCameraPos), &rectText, 0);
 				}
 
 				EndPaint(hwnd, &ps);
@@ -248,37 +248,38 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	// Forward
 	if (GetKeyState('W') & keyDownFlag)
 	{
-		camera->SetPosition({ cameraPos.x, cameraPos.y, cameraPos.z + -speed });
+		//camera->SetPosition({ cameraPos.x, cameraPos.y, cameraPos.z + -speed });
+		camera->Move(MoveDirection::Forward, speed);
+	}
+
+	// Backward
+	if (GetKeyState('S') & keyDownFlag)
+	{
+		camera->Move(MoveDirection::Backward, speed);
 	}
 
 	// Left
 	if (GetKeyState('A') & keyDownFlag)
 	{
-		camera->SetPosition({ cameraPos.x + speed, cameraPos.y, cameraPos.z });
+		camera->Move(MoveDirection::Left, speed);
 	}
 
 	// Right
-	if (GetKeyState('S') & keyDownFlag)
-	{
-		camera->SetPosition({ cameraPos.x, cameraPos.y, cameraPos.z + speed });
-	}
-
-	// Backward
 	if (GetKeyState('D') & keyDownFlag)
 	{
-		camera->SetPosition({ cameraPos.x + -speed, cameraPos.y, cameraPos.z });
+		camera->Move(MoveDirection::Right, speed);
 	}
 
 	// Up
 	if (GetKeyState(VK_LSHIFT) & keyDownFlag)
 	{
-		camera->SetPosition({ cameraPos.x, cameraPos.y + speed, cameraPos.z });
+		camera->Move(MoveDirection::Up, speed);
 	}
 
 	// Down
 	if (GetKeyState(VK_LCONTROL) & keyDownFlag)
 	{
-		camera->SetPosition({ cameraPos.x, cameraPos.y - speed, cameraPos.z });
+		camera->Move(MoveDirection::Down, speed);
 	}
 
 	// Handle mouse movement

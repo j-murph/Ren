@@ -1,6 +1,16 @@
 #pragma once
 #include "Math.h"
 
+enum class MoveDirection
+{
+	Forward,
+	Backward,
+	Left,
+	Right,
+	Up,
+	Down
+};
+
 class Camera
 {
 private:
@@ -9,6 +19,7 @@ private:
 
 	Vec3df position;
 	Vec3df lookAt;
+	Vec3df up;
 
 	float fov;
 	float nearPlane;
@@ -53,5 +64,7 @@ public:
 	float GetFarPlane();
 
 	Vec3df GetLookDirection() const;
-	void LookAt(const Vert3df& at, Vec3df up = Vec3df(0.0f, 1.0f, 0.0f));
+	void LookAt(const Vert3df& at);
+
+	void Move(MoveDirection direction, float units);
 };

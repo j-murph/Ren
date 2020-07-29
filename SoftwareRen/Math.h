@@ -317,6 +317,11 @@ struct Vector3d
 	{
 		return { x * sclar, y * sclar, z * sclar };
 	}
+
+	Vector3d<T> operator-() const
+	{
+		return { -x, -y, -z };
+	}
 };
 
 template <class T>

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Camera.h"
 
-Camera::Camera() : screenWidth(1), screenHeight(1), position(0, 0, 1), lookAt(0, 0, 0)
+Camera::Camera() : screenWidth(1), screenHeight(1), position(0, 0, 1), lookAt(0, 0, 0), up(0, 1, 0)
 {
 	viewMatrix.Identity();
 	SetNearPlane(0.1f);
@@ -97,6 +97,7 @@ int Camera::GetScreenHeight()
 void Camera::SetNearPlane(float nearPlane)
 {
 	this->nearPlane = nearPlane;
+	UpdateProjectionMatrix();
 }
 
 float Camera::GetNearPlane()
@@ -107,6 +108,7 @@ float Camera::GetNearPlane()
 void Camera::SetFarPlane(float farPlane)
 {
 	this->farPlane = farPlane;
+	UpdateProjectionMatrix();
 }
 
 float Camera::GetFarPlane()
@@ -124,7 +126,7 @@ Vec3df Camera::GetLookDirection() const
 	};
 }
 
-void Camera::LookAt(const Vert3df& at, Vec3df up)
+void Camera::LookAt(const Vert3df& at)
 {
 	lookAt = at;
 
@@ -163,4 +165,33 @@ void Camera::UpdateProjectionMatrix()
 	projectionMatrix(2, 2) = (-nearPlane - farPlane) / zRange;
 	projectionMatrix(2, 3) = 1; // Left handed, invert for right handed
 	projectionMatrix(3, 2) = (2 * nearPlane * farPlane) / zRange;
+}
+
+void Camera::Move(MoveDirection direction, float units)
+{
+	auto zAxis = (lookAt - position).Normalize();
+	auto xAxis = up.Cross(zAxis).Normalize();
+	auto yAxis = zAxis.Cross(xAxis);
+
+	switch (direction)
+	{
+	case MoveDirection::Forward:
+		SetPosition(position + zAxis * units);
+		break;
+	case MoveDirection::Backward:
+		SetPosition(position - zAxis * units);
+		break;
+	case MoveDirection::Left:
+		SetPosition(position - xAxis * units);
+		break;
+	case MoveDirection::Right:
+		SetPosition(position + xAxis * units);
+		break;
+	case MoveDirection::Up:
+		SetPosition(position + up * units);
+		break;
+	case MoveDirection::Down:
+		SetPosition(position - up * units);
+		break;
+	}
 }
