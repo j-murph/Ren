@@ -89,7 +89,7 @@ SRGraphicsContext* InitGraphics(HWND hwnd)
 	RECT clientRect;
 	GetClientRect(hwnd, &clientRect);
 
-	if (!srgc->frameBuffer->Init(GetDC(hwnd), clientRect.right, clientRect.bottom))
+	if (!srgc->frameBuffer->Init(hwnd, clientRect.right, clientRect.bottom))
 	{
 		SAFE_FREE(srgc);
 		return nullptr;
@@ -122,16 +122,27 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				if (pSrgc)
 				{
-					pSrgc->frameBuffer->Draw();
+					RECT clientRect;
+					GetClientRect(hwnd, &clientRect);
 
-					wchar_t szCameraPos[255] = { 0 };
+					HDC memDc = CreateCompatibleDC(hdc);
+					HBITMAP hBm = CreateCompatibleBitmap(hdc, clientRect.right, clientRect.bottom);
+					SelectObject(memDc, hBm);
+
+					pSrgc->frameBuffer->Draw(memDc);
+
 					const Vert3df& cameraPos = mainCamera.GetPosition();
 					const Vert3df& lookAt = mainCamera.GetLookDirection();
-					swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look at: %f %f %f",
+					wchar_t szCameraPos[255] = { 0 };
+					int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
 						cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
-					RECT rectText = { 0, 0, mainCamera.GetScreenWidth(), mainCamera.GetScreenHeight() };
-					//DrawText(hdc, szCameraPos, wcslen(szCameraPos), &rectText, 0);
+					DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
+
+					BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, memDc, 0, 0, SRCCOPY);
+
+					DeleteObject(hBm);
+					DeleteDC(memDc);
 				}
 
 				EndPaint(hwnd, &ps);

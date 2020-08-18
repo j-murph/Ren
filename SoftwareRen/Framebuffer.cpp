@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Framebuffer.h"
 
-Framebuffer::Framebuffer() : hdc(nullptr), bitmap(nullptr), width(0), height(0)
+Framebuffer::Framebuffer() : targetWindow(nullptr), targetWindowHdc(nullptr), bitmap(nullptr), width(0), height(0)
 {
 }
 
@@ -10,9 +10,10 @@ Framebuffer::~Framebuffer()
 	Free();
 }
 
-bool Framebuffer::Init(HDC hdc, int width, int height)
+bool Framebuffer::Init(HWND targetWindow, int width, int height)
 {
-	this->hdc = hdc;
+	this->targetWindow = targetWindow;
+	targetWindowHdc = GetDC(this->targetWindow);
 	return SetSize(width, height);
 }
 
@@ -34,7 +35,7 @@ bool Framebuffer::SetSize(int width, int height)
 	bmInfo.bmiHeader.biPlanes = 1;
 	bmInfo.bmiHeader.biCompression = BI_RGB;
 
-	bitmap = CreateDIBSection(hdc, &bmInfo, DIB_RGB_COLORS, &pixels, nullptr, 0);
+	bitmap = CreateDIBSection(targetWindowHdc, &bmInfo, DIB_RGB_COLORS, &pixels, nullptr, 0);
 
 	return bitmap != nullptr;
 }
@@ -53,11 +54,11 @@ void Framebuffer::Clear(Color color)
 	}
 }
 
-void Framebuffer::Draw()
+void Framebuffer::Draw(HDC drawToHdc)
 {
-	HDC dc = CreateCompatibleDC(hdc);
+	HDC dc = CreateCompatibleDC(drawToHdc);
 	SelectObject(dc, bitmap);
-	BitBlt(hdc, 0, 0, width, height, dc, 0, 0, SRCCOPY);
+	BitBlt(drawToHdc, 0, 0, width, height, dc, 0, 0, SRCCOPY);
 	DeleteDC(dc);
 }
 
@@ -67,6 +68,12 @@ void Framebuffer::Free()
 	{
 		DeleteObject(bitmap);
 		bitmap = nullptr;
+	}
+
+	if (targetWindowHdc)
+	{
+		ReleaseDC(targetWindow, targetWindowHdc);
+		targetWindowHdc = nullptr;
 	}
 }
 

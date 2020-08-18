@@ -7,7 +7,8 @@ private:
 	HBITMAP bitmap;
 	BITMAPINFO bmInfo;
 
-	HDC hdc;
+	HWND targetWindow;
+	HDC targetWindowHdc;
 
 	void* pixels;
 
@@ -18,7 +19,7 @@ public:
 	Framebuffer();
 	~Framebuffer();
 
-	bool Init(HDC hdc, int width, int height);
+	bool Init(HWND targetWindow, int width, int height);
 
 	bool SetSize(int width, int height);
 
@@ -34,7 +35,7 @@ public:
 		dwPixels[x + y * width] = value;
 	}
 
-	void Draw();
+	void Draw(HDC drawToHdc);
 
 	void Free();
 
