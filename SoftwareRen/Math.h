@@ -128,7 +128,6 @@ struct Vertex4d
 	{
 		if (w != 0.0f)
 		{
-			//const float absW = abs(w);
 			x /= w;
 			y /= w;
 			z /= w;
@@ -341,12 +340,12 @@ struct Matrix4x4
 
 	void Zero()
 	{
-		ZeroMemory(this->a, sizeof(T) * 4 * 4);
+		ZeroMemory(a, sizeof(T) * 4 * 4);
 	}
 
 	void Identity()
 	{
-		ZeroMemory(this->a, sizeof(T) * 4 * 4);
+		ZeroMemory(a, sizeof(T) * 4 * 4);
 		a[0][0] = 1;
 		a[1][1] = 1;
 		a[2][2] = 1;

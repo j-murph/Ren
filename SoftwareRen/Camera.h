@@ -17,7 +17,7 @@ private:
 	Mat4x4f viewMatrix;
 	Mat4x4f projectionMatrix;
 
-	Vec3df position;
+	Vert3df position;
 	Vec3df lookAt;
 	Vec3df up;
 
@@ -37,7 +37,7 @@ public:
 	const Mat4x4f& GetProjectionMatrix();
 
 	void SetPosition(const Vert3df& position);
-	Vert3df GetPosition();
+	const Vert3df& GetPosition();
 
 	void SetRotationX(float angle);
 	float GetRotationX();

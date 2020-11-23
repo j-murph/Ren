@@ -26,7 +26,7 @@ void Camera::SetPosition(const Vert3df& position)
 	LookAt(lookAt - diff);
 }
 
-Vert3df Camera::GetPosition()
+const Vert3df& Camera::GetPosition()
 {
 	return position;
 }

@@ -41,7 +41,7 @@ public:
 	{
 		if (tokenIndex < 0 || tokenIndex >= tokens.size())
 		{
-			if (enableParserThrow) ThrowParserException("Index out of range.");
+			ThrowParserExceptionIfEnabled("Index out of range.");
 			return T();
 		}
 
@@ -50,8 +50,8 @@ public:
 		ss << tokens[tokenIndex];
 		ss >> temp;
 
-		if (ss.fail() && enableParserThrow)
-			ThrowParserException("Parse failure.");
+		if (ss.fail())
+			ThrowParserExceptionIfEnabled("Parse failure.");
 
 		return temp;
 	}
@@ -66,16 +66,19 @@ public:
 		return tokens;
 	}
 
-	void ThrowParserException(const char* message)
+	void ThrowParserExceptionIfEnabled(const char* message)
 	{
-		throw std::exception(message);
+		if (enableParserThrow)
+		{
+			throw std::exception(message);
+		}
 	}
 
 	const std::string& operator[](int tokenIndex)
 	{
 		if (tokenIndex < 0 || tokenIndex >= tokens.size())
 		{
-			if (enableParserThrow) ThrowParserException("Index out of range.");
+			ThrowParserExceptionIfEnabled("Index out of range.");
 			return emptyString;
 		}
 

@@ -120,30 +120,31 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				PAINTSTRUCT ps;
 				HDC hdc = BeginPaint(hwnd, &ps);
 
+				RECT clientRect;
+				GetClientRect(hwnd, &clientRect);
+
+				HDC memDc = CreateCompatibleDC(hdc);
+				HBITMAP hBm = CreateCompatibleBitmap(hdc, clientRect.right, clientRect.bottom);
+				SelectObject(memDc, hBm);
+
 				if (pSrgc)
 				{
-					RECT clientRect;
-					GetClientRect(hwnd, &clientRect);
-
-					HDC memDc = CreateCompatibleDC(hdc);
-					HBITMAP hBm = CreateCompatibleBitmap(hdc, clientRect.right, clientRect.bottom);
-					SelectObject(memDc, hBm);
-
 					pSrgc->frameBuffer->Draw(memDc);
-
-					const Vert3df& cameraPos = mainCamera.GetPosition();
-					const Vert3df& lookAt = mainCamera.GetLookDirection();
-					wchar_t szCameraPos[255] = { 0 };
-					int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
-						cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
-
-					DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
-
-					BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, memDc, 0, 0, SRCCOPY);
-
-					DeleteObject(hBm);
-					DeleteDC(memDc);
 				}
+
+				const Vert3df& cameraPos = mainCamera.GetPosition();
+				const Vert3df& lookAt = mainCamera.GetLookDirection();
+				wchar_t szCameraPos[255] = { 0 };
+
+				int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
+					cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
+
+				DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
+
+				BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, memDc, 0, 0, SRCCOPY);
+
+				DeleteObject(hBm);
+				DeleteDC(memDc);
 
 				EndPaint(hwnd, &ps);
 			}
@@ -259,7 +260,6 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	// Forward
 	if (GetKeyState('W') & keyDownFlag)
 	{
-		//camera->SetPosition({ cameraPos.x, cameraPos.y, cameraPos.z + -speed });
 		camera->Move(MoveDirection::Forward, speed);
 	}
 

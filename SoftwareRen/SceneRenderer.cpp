@@ -44,6 +44,8 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 	const Mat4x4f& projectionMatrix = camera->GetProjectionMatrix();
 	const Mat4x4f& vp = viewMatrix * projectionMatrix;
 
+	const Vert3df& cameraPos = camera->GetPosition();
+
 	const float screenWidth = static_cast<float>(gfx.frameBuffer->GetWidth());
 	const float screenHeight = static_cast<float>(gfx.frameBuffer->GetHeight());
 
@@ -57,10 +59,7 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 		if (gfx.options.cullBackfaces)
 		{
 			Tri3df worldTri = { p1c.x, p1c.y, p1c.z, p2c.x, p2c.y, p2c.z, p3c.x, p3c.y, p3c.z };
-			Vec3df vecCamToTri = worldTri.GetCenter() - camera->GetPosition();
-
-			//auto pos = camera->GetPosition();
-			//DebugDrawLine(worldTri.GetCenter(), pos, gfx);
+			Vec3df vecCamToTri = worldTri.GetCenter() - cameraPos;
 
 			if (vecCamToTri.Dot(worldTri.GetNormal()) >= 0.f)
 			{
