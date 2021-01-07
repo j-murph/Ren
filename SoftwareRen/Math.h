@@ -342,6 +342,11 @@ struct Matrix4x4
 		memcpy(a, other.a, sizeof(T) * 4 * 4);
 	}
 
+	Matrix4x4(const T elements[16])
+	{
+		memcpy(a, elements, sizeof(T) * 16);
+	}
+
 	void Zero()
 	{
 		ZeroMemory(a, sizeof(T) * 4 * 4);
@@ -368,10 +373,10 @@ struct Matrix4x4
 		return Vertex3d<T>(a[3][0], a[3][1], a[3][2]);
 	}
 
-	void SetRotationX(float angle)
+	void SetRotationX(T angle)
 	{
-		float sin = std::sin(angle);
-		float cos = std::cos(angle);
+		T sin = std::sin(angle);
+		T cos = std::cos(angle);
 
 		a[1][1] = cos;
 		a[1][2] = sin;
@@ -379,10 +384,10 @@ struct Matrix4x4
 		a[2][2] = cos;
 	}
 
-	void SetRotationY(float angle)
+	void SetRotationY(T angle)
 	{
-		float sin = std::sin(angle);
-		float cos = std::cos(angle);
+		T sin = std::sin(angle);
+		T cos = std::cos(angle);
 
 		a[0][0] = cos;
 		a[0][2] = -sin;
@@ -390,10 +395,10 @@ struct Matrix4x4
 		a[2][2] = cos;
 	}
 
-	void SetRotationZ(float angle)
+	void SetRotationZ(T angle)
 	{
-		float sin = std::sin(angle);
-		float cos = std::cos(angle);
+		T sin = std::sin(angle);
+		T cos = std::cos(angle);
 
 		a[0][0] = cos;
 		a[0][1] = sin;
@@ -401,19 +406,36 @@ struct Matrix4x4
 		a[1][1] = cos;
 	}
 
-	void SetScaleX(float scale)
+	void SetScaleX(T scale)
 	{
 		a[0][0] = scale;
 	}
 
-	void SetScaleY(float scale)
+	void SetScaleY(T scale)
 	{
 		a[1][1] = scale;
 	}
 
-	void SetScaleZ(float scale)
+	void SetScaleZ(T scale)
 	{
 		a[2][2] = scale;
+	}
+
+	void Transpose()
+	{
+		T temp;
+
+		/*std::swap(f[1], f[4]);
+		std::swap(f[2], f[8]);
+		std::swap(f[3], f[12]);
+
+		std::swap(f[6], f[9]);
+		std::swap(f[7], f[13]);
+		std::swap(f[11], f[14]);*/
+		for (int i = 0; i < 4; ++i)
+			for (int j = 0; j < 4; ++j) {
+				a[j][i] = a[i][j];
+			}
 	}
 
 	inline T& operator()(int x, int y)
