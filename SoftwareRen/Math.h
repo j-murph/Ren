@@ -326,7 +326,11 @@ struct Vector3d
 template <class T>
 struct Matrix4x4
 {
-	T a[4][4];
+	union
+	{
+		T a[4][4];
+		T f[16];
+	};
 
 	Matrix4x4()
 	{
@@ -423,7 +427,7 @@ struct Matrix4x4
 	}
 
 	/*(function() {
-	const getI = (name, x, y) = > name + '[' + x + '][' + y + ']';
+	const getI = (name, x, y) => name + '[' + x + '][' + y + ']';
 	for (let x = 0; x < 4; x++)
 	for (let y = 0; y < 4; y++)
 	{
@@ -475,7 +479,6 @@ struct Matrix4x4
 
 	Matrix4x4<T>& operator=(const Matrix4x4<T>& other)
 	{
-		size_t v = sizeof(a);
 		memcpy(a, other.a, sizeof(a));
 		return *this;
 	}
