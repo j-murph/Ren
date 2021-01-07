@@ -423,19 +423,13 @@ struct Matrix4x4
 
 	void Transpose()
 	{
-		T temp;
-
-		/*std::swap(f[1], f[4]);
+		std::swap(f[1], f[4]);
 		std::swap(f[2], f[8]);
 		std::swap(f[3], f[12]);
 
 		std::swap(f[6], f[9]);
 		std::swap(f[7], f[13]);
-		std::swap(f[11], f[14]);*/
-		for (int i = 0; i < 4; ++i)
-			for (int j = 0; j < 4; ++j) {
-				a[j][i] = a[i][j];
-			}
+		std::swap(f[11], f[14]);
 	}
 
 	inline T& operator()(int x, int y)
