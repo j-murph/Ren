@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Rasterizer.h"
-#include "Bresenham.h"
 
 Rasterizer::Rasterizer()
 {
