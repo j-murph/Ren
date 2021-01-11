@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Rasterizer.h"
+#include "Bresenham.h"
 
 Rasterizer::Rasterizer()
 {
@@ -41,17 +42,11 @@ void Rasterizer::DrawLine(const Vert2di& p1, const Vert2di& p2, const SRGraphics
 void Rasterizer::DrawLine(int p1x, int p1y, int p2x, int p2y, const SRGraphicsContext& gfx)
 {
 	Color col(255, 0, 255);
-	if (mode == Point)
-	{
-		gfx.frameBuffer->PutPixel(p1x, p1y, col);
-		gfx.frameBuffer->PutPixel(p2x, p2y, col);
-		return;
-	}
 
 	// Bresenham's algorithm
-	bool Steep = abs(p1y - p2y) > abs(p1x - p2x);
+	bool steep = abs(p1y - p2y) > abs(p1x - p2x);
 
-	if (Steep)
+	if (steep)
 	{
 		std::swap(p1x, p1y);
 		std::swap(p2y, p2x);
@@ -74,7 +69,7 @@ void Rasterizer::DrawLine(int p1x, int p1y, int p2x, int p2y, const SRGraphicsCo
 
 	for (int x = p1x; x <= p2x; x++)
 	{
-		if (Steep)
+		if (steep)
 			gfx.frameBuffer->PutPixel(y, x, col);
 		else
 			gfx.frameBuffer->PutPixel(x, y, col);
@@ -87,7 +82,6 @@ void Rasterizer::DrawLine(int p1x, int p1y, int p2x, int p2y, const SRGraphicsCo
 			error += dx;
 		}
 	}
-
 }
 
 void Rasterizer::DrawPoint(const Vert2di& p1, const SRGraphicsContext& gfx)
@@ -119,5 +113,24 @@ void Rasterizer::DrawWireframeTriangle(const Tri2di& triangle, const SRGraphicsC
 
 void Rasterizer::DrawFilledTriangle(const Tri2di& triangle, const SRGraphicsContext& gfx)
 {
-	
+	auto top = &triangle.p1,
+		 mid = &triangle.p2,
+		 bot = &triangle.p3;
+
+	if (top->y < mid->y)
+	{
+		std::swap(top, mid);
+	}
+
+	if (top->y < bot->y)
+	{
+		std::swap(top, bot);
+	}
+
+	if (mid->y < bot->y)
+	{
+		std::swap(mid, bot);
+	}
+
+	//BresenhamEdge edge;
 }
