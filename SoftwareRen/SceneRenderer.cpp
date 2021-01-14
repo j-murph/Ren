@@ -14,8 +14,6 @@ void SceneRenderer::RenderScene(const SRGraphicsContext& gfx)
 {
 	_ASSERT_EXPR(camera != nullptr, TEXT("Camera must be set."));
 
-	rasterizer->SetRasterizerMode(RasterizerMode::Wireframe);
-
 	for (RenderObject*& object : renderObjects)
 	{
 		switch (object->GetType())

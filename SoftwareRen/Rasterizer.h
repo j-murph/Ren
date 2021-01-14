@@ -17,6 +17,8 @@ private:
 	void DrawWireframeTriangle(const Tri2di& triangle, const SRGraphicsContext& gfx);
 	void DrawFilledTriangle(const Tri2di& triangle, const SRGraphicsContext& gfx);
 
+	void DrawScanline(int startX, int endX, int y, const SRGraphicsContext & gfx);
+
 	void (Rasterizer::*CurrentModeDrawTriangle)(const Tri2di&, const SRGraphicsContext&);
 
 public:

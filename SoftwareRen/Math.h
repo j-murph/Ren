@@ -244,6 +244,19 @@ struct Vector2d
 	{
 		return x * other.x + y * other.y;
 	}
+
+	Vector2d<T>& operator /=(T scalar)
+	{
+		x /= scalar;
+		y /= scalar;
+		return *this;
+	}
+
+	Vector2d<T> operator-(const Vector2d<T>& other)
+	{
+		Vector2d<T> temp = { x - other.x, y - other.y };
+		return temp;
+	}
 };
 
 template <class T>

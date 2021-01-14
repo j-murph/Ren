@@ -159,6 +159,7 @@
     <ClInclude Include="Macros.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="RasterEdge.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="RenderObject.h" />
     <ClInclude Include="resource.h" />

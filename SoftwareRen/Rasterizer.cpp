@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Rasterizer.h"
+#include "RasterEdge.h"
 
 Rasterizer::Rasterizer()
 {
@@ -131,5 +132,43 @@ void Rasterizer::DrawFilledTriangle(const Tri2di& triangle, const SRGraphicsCont
 		std::swap(mid, bot);
 	}
 
-	//BresenhamEdge edge;
+	Vert2di pix1 = *top, pix2 = *mid;
+	RasterEdge edge1(*top, *bot), edge2(*top, *mid);
+
+	int y = top->y;
+	while (y > bot->y)
+	{
+		while (pix1.y != y)
+		{
+			if (!edge1.Next(pix1))
+			{
+				break;
+			}
+		}
+
+		while (pix2.y != y)
+		{
+			if (!edge2.Next(pix2))
+			{
+				pix2 = edge2.Reset(*mid, *bot);
+				break;
+			}
+		}
+
+		DrawScanline(pix1.x, pix2.x, y, gfx);
+
+		y--;
+	}
+}
+
+void Rasterizer::DrawScanline(int startX, int endX, int y, const SRGraphicsContext& gfx)
+{
+	if (startX > endX)
+		std::swap(startX, endX);
+
+	while (startX <= endX)
+	{
+		gfx.frameBuffer->PutPixel(startX, y, Color(255, 0, 0));
+		startX++;
+	}
 }
