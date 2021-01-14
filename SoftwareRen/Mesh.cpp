@@ -52,7 +52,7 @@ bool Mesh::LoadFromFile(const std::string& filename)
 				Tokenizer<char> faceTkn(true);
 
 				Tri3df triTemp;
-				for (int i = 0; i < 3; i++)
+				for (int i = 0; i < 4; i++)
 				{
 					faceTkn.TokenizeString(tkn[i + 1], OBJ_FACE_SEPARATOR_CHAR);
 
@@ -62,14 +62,24 @@ bool Mesh::LoadFromFile(const std::string& filename)
 					faceTkn.Clear();
 
 					if (i == 0)
+					{
 						triTemp.p1 = vertex;
+					}
 					else if (i == 1)
+					{
 						triTemp.p2 = vertex;
+					}
 					else if (i == 2)
+					{
 						triTemp.p3 = vertex;
+						triangles.push_back(triTemp);
+					}
+					else if (i == 3)
+					{
+						triTemp = Tri3df(triTemp.p1, triTemp.p3, vertex);
+						triangles.push_back(triTemp);
+					}
 				}
-				
-				triangles.push_back(triTemp);
 			}
 		}
 		catch (const std::exception&)
