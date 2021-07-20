@@ -120,12 +120,10 @@ void SceneRenderer::DebugDrawLine(const Vert3df& p1, const Vert3df& p2, const SR
 	p1c.DivideByW();
 	p2c.DivideByW();
 
-	Vert2di rasterPoints[2];
-	rasterPoints[0].x = static_cast<int>((p1c.x + 1.0f) / 2.0f * screenWidth);
-	rasterPoints[0].y = static_cast<int>((p1c.y + 1.0f) / 2.0f * screenHeight);
-
-	rasterPoints[1].x = static_cast<int>((p2c.x + 1.0f) / 2.0f * screenWidth);
-	rasterPoints[1].y = static_cast<int>((p2c.y + 1.0f) / 2.0f * screenHeight);
+	Vert2di rasterPoints[2] = {
+		{ static_cast<int>((p1c.x + 1.0f) / 2.0f * screenWidth), static_cast<int>((p1c.y + 1.0f) / 2.0f * screenHeight) },
+		{ static_cast<int>((p2c.x + 1.0f) / 2.0f * screenWidth), static_cast<int>((p2c.y + 1.0f) / 2.0f * screenHeight) }
+	};
 
 	rasterizer->DrawLine(rasterPoints[0], rasterPoints[1], gfx);
 }

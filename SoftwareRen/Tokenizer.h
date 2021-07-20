@@ -37,7 +37,7 @@ public:
 	}
 
 	template <class T>
-	T ParseToken(int tokenIndex)
+	T ParseToken(size_t tokenIndex)
 	{
 		if (tokenIndex < 0 || tokenIndex >= tokens.size())
 		{
@@ -74,7 +74,7 @@ public:
 		}
 	}
 
-	const std::string& operator[](int tokenIndex)
+	const std::string& operator[](size_t tokenIndex)
 	{
 		if (tokenIndex < 0 || tokenIndex >= tokens.size())
 		{

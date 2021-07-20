@@ -139,6 +139,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
 					cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
+				SetTextColor(memDc, 0x00FFFFFF);
+				SetBkColor(memDc, TRANSPARENT);
 				DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
 
 				BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, memDc, 0, 0, SRCCOPY);
@@ -184,6 +186,8 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 	Mesh mesh;
 	bool meshLoaded = mesh.LoadFromFile("..\\Assets\\Models\\monkey2.obj");
 	_ASSERT_EXPR(meshLoaded, TEXT("Failed to load mesh"));
+	//mesh.CreateCube(.50f);
+	pRasterizer->SetRasterizerMode(RasterizerMode::Wireframe);
 
 	mesh.SetPosition({ 0, 0, 2 });
 	pSceneRenderer->AddObjectToScene(&mesh);

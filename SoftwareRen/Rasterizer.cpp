@@ -4,7 +4,7 @@
 
 Rasterizer::Rasterizer()
 {
-	SetRasterizerMode(RasterizerMode::Wireframe);
+	SetRasterizerMode(RasterizerMode::Filled);
 }
 
 void Rasterizer::SetRasterizerMode(RasterizerMode mode)
