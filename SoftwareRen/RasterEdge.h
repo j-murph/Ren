@@ -7,7 +7,6 @@ struct RasterEdge
 	Vec2df direction;
 	int length;
 	int currentDistance;
-	int yChange;
 
 	RasterEdge(const Vert2di& start, const Vert2di& end)
 	{
@@ -17,7 +16,6 @@ struct RasterEdge
 	Vert2di Reset(const Vert2di& start, const Vert2di& end)
 	{
 		this->start = start;
-		yChange = end.y - start.y;
 		direction = Vec2df((float)end.x, (float)end.y) - Vec2df((float)start.x, (float)start.y);
 		length = (int)direction.Length();
 		direction /= (float)length;

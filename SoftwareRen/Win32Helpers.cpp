@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Win32Helpers.h"
 
-POINT GetMouseCoordinates(const HWND& hwnd)
+POINT GetMouseCoordinates(HWND hwnd)
 {
 	POINT p;
 	GetCursorPos(&p);

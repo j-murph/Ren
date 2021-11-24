@@ -4,8 +4,8 @@
 
 struct SRGraphicsContext
 {
-	Framebuffer* frameBuffer;
-	ZBuffer* zBuffer;
+	std::unique_ptr<Framebuffer> frameBuffer;
+	std::unique_ptr<ZBuffer> zBuffer;
 	HWND targetWindow;
 
 	struct
@@ -13,19 +13,13 @@ struct SRGraphicsContext
 		bool cullBackfaces;
 	} options;
 
-	SRGraphicsContext(HWND targetWindow) : frameBuffer(new Framebuffer),
-		zBuffer(new ZBuffer), targetWindow(targetWindow)
+	SRGraphicsContext(HWND targetWindow) : frameBuffer(std::make_unique<Framebuffer>()),
+		zBuffer(std::make_unique<ZBuffer>()), targetWindow(targetWindow)
 	{
 		options.cullBackfaces = true;
 	}
 
-	~SRGraphicsContext()
-	{
-		SAFE_FREE(frameBuffer);
-		SAFE_FREE(zBuffer);
-	}
-
-	const HWND& getTargetWindow()
+	HWND GetTargetWindow()
 	{
 		return targetWindow;
 	}

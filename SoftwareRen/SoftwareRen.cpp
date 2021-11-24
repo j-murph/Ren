@@ -8,7 +8,7 @@
 #include "SceneRenderer.h"
 
 #define MAX_LOADSTRING 100
-#define MAX_FPS 322
+#define MAX_FPS 60
 #define MOUSE_SENSITIVITY 2.0f
 
 WCHAR szTitle[MAX_LOADSTRING];
@@ -17,19 +17,19 @@ WCHAR szWindowClass[MAX_LOADSTRING];
 Camera mainCamera;
 
 std::unique_ptr<SRGraphicsContext> pSrgc;
-std::unique_ptr<Rasterizer> pRasterizer(new Rasterizer);
-std::unique_ptr<SceneRenderer> pSceneRenderer(new SceneRenderer(pRasterizer.get()));
+std::unique_ptr<Rasterizer> pRasterizer(std::make_unique<Rasterizer>());
+std::unique_ptr<SceneRenderer> pSceneRenderer(std::make_unique<SceneRenderer>(pRasterizer.get()));
 
-int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
-                     _In_opt_ HINSTANCE hPrevInstance,
-                     _In_ LPWSTR    lpCmdLine,
-                     _In_ int       nCmdShow)
+int APIENTRY wWinMain(HINSTANCE hInstance,
+					  HINSTANCE hPrevInstance,
+					  LPWSTR lpCmdLine,
+					  int nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hPrevInstance);
-    UNREFERENCED_PARAMETER(lpCmdLine);
+	UNREFERENCED_PARAMETER(hPrevInstance);
+	UNREFERENCED_PARAMETER(lpCmdLine);
 
-    LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_SOFTWAREREN, szWindowClass, MAX_LOADSTRING);
+	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
+	LoadStringW(hInstance, IDC_SOFTWAREREN, szWindowClass, MAX_LOADSTRING);
 	
 	bool registeredClass = MyRegisterClass(hInstance) != 0;
 	_ASSERT_EXPR(registeredClass, TEXT("Failed to register class."));
@@ -40,46 +40,45 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 	pSrgc.reset(InitGraphics(hwnd));
 	_ASSERT_EXPR(pSrgc.get() != nullptr, TEXT("Failed to create graphics context."));
 
-    int returnCode = MessageLoop(hwnd, hInstance);
-	return returnCode;
+	return MessageLoop(hwnd, hInstance);
 }
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-    WNDCLASSEXW wcex;
+	WNDCLASSEXW wcex;
 
-    wcex.cbSize			= sizeof(WNDCLASSEX);
-    wcex.style          = CS_HREDRAW | CS_VREDRAW;
-    wcex.lpfnWndProc    = WndProc;
-    wcex.cbClsExtra     = 0;
-    wcex.cbWndExtra     = 0;
-    wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SOFTWAREREN));
-    wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-    wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_SOFTWAREREN);
-    wcex.lpszClassName  = szWindowClass;
-    wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	wcex.cbSize         = sizeof(WNDCLASSEX);
+	wcex.style          = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc    = WndProc;
+	wcex.cbClsExtra     = 0;
+	wcex.cbWndExtra     = 0;
+	wcex.hInstance      = hInstance;
+	wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SOFTWAREREN));
+	wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
+	wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_SOFTWAREREN);
+	wcex.lpszClassName  = szWindowClass;
+	wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
-    return RegisterClassExW(&wcex);
+	return RegisterClassExW(&wcex);
 }
 
 HWND InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
-   HWND hwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+	HWND hwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
-   if (!hwnd)
-   {
-      return nullptr;
-   }
+	if (!hwnd)
+	{
+		return nullptr;
+	}
 
-   ShowWindow(hwnd, nCmdShow);
-   UpdateWindow(hwnd);
+	ShowWindow(hwnd, nCmdShow);
+	UpdateWindow(hwnd);
 
-   //ShowCursor(FALSE);
+	//ShowCursor(FALSE);
 
-   return hwnd;
+	return hwnd;
 }
 
 SRGraphicsContext* InitGraphics(HWND hwnd)
@@ -102,8 +101,8 @@ SRGraphicsContext* InitGraphics(HWND hwnd)
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    switch (message)
-    {
+	switch (message)
+	{
 		case WM_COMMAND:
 			{	/*
 				int wmId = LOWORD(wParam);
@@ -117,38 +116,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		case WM_PAINT:
 			{
-				PAINTSTRUCT ps;
-				HDC hdc = BeginPaint(hwnd, &ps);
-
-				RECT clientRect;
-				GetClientRect(hwnd, &clientRect);
-
-				HDC memDc = CreateCompatibleDC(hdc);
-				HBITMAP hBm = CreateCompatibleBitmap(hdc, clientRect.right, clientRect.bottom);
-				SelectObject(memDc, hBm);
-
 				if (pSrgc)
 				{
-					pSrgc->frameBuffer->Draw(memDc);
+					PaintToWindow(hwnd);
 				}
-
-				const Vert3df& cameraPos = mainCamera.GetPosition();
-				const Vert3df& lookAt = mainCamera.GetLookDirection();
-				wchar_t szCameraPos[255] = { 0 };
-
-				int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
-					cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
-
-				SetTextColor(memDc, 0x00FFFFFF);
-				SetBkColor(memDc, TRANSPARENT);
-				DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
-
-				BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, memDc, 0, 0, SRCCOPY);
-
-				DeleteObject(hBm);
-				DeleteDC(memDc);
-
-				EndPaint(hwnd, &ps);
 			}
 			break;
 		case WM_SIZE:
@@ -167,16 +138,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				mainCamera.SetScreenHeight(clientRect.bottom);
 			}
 			break;
+		case WM_KEYDOWN:
+			{
+				if (wParam == VK_ESCAPE)
+				{
+					PostQuitMessage(0);
+				}
+			}
+			break;
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			break;
-		case WM_KEYDOWN:
-			if (wParam == VK_ESCAPE) PostQuitMessage(0);
-			break;
 		default:
 			return DefWindowProc(hwnd, message, wParam, lParam);
-    }
-    return 0;
+	}
+	return 0;
 }
 
 int MessageLoop(HWND hwnd, HINSTANCE hInstance)
@@ -186,7 +162,6 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 	Mesh mesh;
 	bool meshLoaded = mesh.LoadFromFile("..\\Assets\\Models\\monkey2.obj");
 	_ASSERT_EXPR(meshLoaded, TEXT("Failed to load mesh"));
-	//mesh.CreateCube(.50f);
 	pRasterizer->SetRasterizerMode(RasterizerMode::Wireframe);
 
 	mesh.SetPosition({ 0, 0, 2 });
@@ -237,7 +212,7 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 			Render(hwnd);
 			InvalidateRect(hwnd, nullptr, false);
 
-			int currentFps = (int)(1000.0f / (fpsCounter.Elapsed() * 1000) + .5f);
+			int currentFps = (int)(1.0f / fpsCounter.Elapsed() + .5f);
 			UpdateTitle(hwnd, currentFps);
 
 			fpsCounter.Reset();
@@ -251,6 +226,39 @@ void Render(HWND hwnd)
 	if (!pSrgc) return;
 	pSrgc->frameBuffer->Clear({ 0, 0, 0 });
 	pSceneRenderer->RenderScene(*pSrgc);
+}
+
+void PaintToWindow(HWND hwnd)
+{
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(hwnd, &ps);
+
+	RECT clientRect;
+	GetClientRect(hwnd, &clientRect);
+
+	HDC memDc = CreateCompatibleDC(hdc);
+	HBITMAP hBm = CreateCompatibleBitmap(hdc, clientRect.right, clientRect.bottom);
+	SelectObject(memDc, hBm);
+
+	pSrgc->frameBuffer->Draw(memDc);
+
+	const Vert3df& cameraPos = mainCamera.GetPosition();
+	const Vert3df& lookAt = mainCamera.GetLookDirection();
+
+	wchar_t szCameraPos[255] = { 0 };
+	int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
+		cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
+
+	SetTextColor(memDc, 0x00FFFFFF);
+	SetBkColor(memDc, TRANSPARENT);
+	DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
+
+	BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, memDc, 0, 0, SRCCOPY);
+
+	DeleteObject(hBm);
+	DeleteDC(memDc);
+
+	EndPaint(hwnd, &ps);
 }
 
 void UpdateCamera(HWND hwnd, Camera* camera)

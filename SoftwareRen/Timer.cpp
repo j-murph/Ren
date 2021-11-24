@@ -38,11 +38,6 @@ float Timer::Lock()
 	return lockedTime;
 }
 
-float Timer::ElapsedSinceLock()
-{
-	return Elapsed() - lockedTime;
-}
-
 float Timer::GetLockedTime()
 {
 	return lockedTime;

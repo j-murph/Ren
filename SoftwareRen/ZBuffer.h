@@ -18,8 +18,10 @@ public:
 
 	void Clear(float value = 0.0f);
 
-	__forceinline void SetDepth(int x, int y, float depth)
-	{
-		buffer[x + y * height] = depth;
-	}
+	inline void SetDepth(int x, int y, float depth);
 };
+
+void ZBuffer::SetDepth(int x, int y, float depth)
+{
+	buffer[x + y * height] = depth;
+}

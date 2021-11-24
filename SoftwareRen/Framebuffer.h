@@ -25,15 +25,7 @@ public:
 
 	void Clear(Color color);
 
-	__forceinline void PutPixel(const int& x, const int& y, const Color& color)
-	{
-		if (x < 0 || y < 0) return;
-		if (x >= width || y >= height) return;
-
-		DWORD value = (color.b) | (color.g << 8) | (color.r << 16);
-		DWORD* dwPixels = static_cast<DWORD*>(pixels);
-		dwPixels[x + y * width] = value;
-	}
+	inline void PutPixel(const int& x, const int& y, const Color& color);
 
 	void Draw(HDC drawToHdc);
 
@@ -42,3 +34,13 @@ public:
 	int GetWidth() const;
 	int GetHeight() const;
 };
+
+void Framebuffer::PutPixel(const int& x, const int& y, const Color& color)
+{
+	if (x < 0 || y < 0) return;
+	if (x >= width || y >= height) return;
+
+	DWORD value = (color.b) | (color.g << 8) | (color.r << 16);
+	DWORD* dwPixels = static_cast<DWORD*>(pixels);
+	dwPixels[x + y * width] = value;
+}

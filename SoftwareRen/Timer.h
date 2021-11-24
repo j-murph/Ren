@@ -14,7 +14,6 @@ public:
 	void Reset();
 	float Elapsed();
 	float Lock();
-	float ElapsedSinceLock();
 	float GetLockedTime();
 };
 
