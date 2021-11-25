@@ -54,10 +54,15 @@ bool Mesh::LoadFromFile(const std::string& filename)
 				Tri3df triTemp;
 				for (int i = 0; i < 4; i++)
 				{
+					if (i >= tkn.GetTokens().size() - 1)
+					{
+						break;
+					}
+
 					faceTkn.TokenizeString(tkn[i + 1], OBJ_FACE_SEPARATOR_CHAR);
 
 					const int vertIndex = faceTkn.ParseToken<int>(0);
-					Vert3df vertex = vertices.at(vertIndex - 1);
+					const Vert3df& vertex = vertices.at(vertIndex - 1);
 
 					faceTkn.Clear();
 

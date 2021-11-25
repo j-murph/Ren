@@ -22,7 +22,7 @@ void RenderRotTri(HWND hwnd, Rasterizer* raster, SRGraphicsContext* pSrgc)
 		float t = (float)std::atan2(v.x, v.y);
 		float l = (float)std::sqrt(v.x * v.x + v.y * v.y);
 
-		v.x = (int)(std::cosl(t + theta) * l + x);
+		v.x = (int)(std::cos(t + theta) * l + x);
 		v.y = (int)(std::sin(t + theta) * l + y);
 	}
 

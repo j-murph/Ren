@@ -144,6 +144,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				{
 					PostQuitMessage(0);
 				}
+				else if (wParam == 'V')
+				{
+					ToggleViewMode();
+				}
 			}
 			break;
 		case WM_DESTROY:
@@ -160,9 +164,9 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SOFTWAREREN));
 
 	Mesh mesh;
-	bool meshLoaded = mesh.LoadFromFile("..\\Assets\\Models\\monkey2.obj");
+	bool meshLoaded = mesh.LoadFromFile("..\\Assets\\Models\\libertstatue.obj");
 	_ASSERT_EXPR(meshLoaded, TEXT("Failed to load mesh"));
-	pRasterizer->SetRasterizerMode(RasterizerMode::Wireframe);
+	pSceneRenderer->GetRasterizer()->SetRasterizerMode(RasterizerMode::Wireframe);
 
 	mesh.SetPosition({ 0, 0, 2 });
 	pSceneRenderer->AddObjectToScene(&mesh);
@@ -175,7 +179,6 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 	g_Timer.Reset();
 
 	Timer fpsLimiter;
-	Timer fpsCounter;
 
 	while (true)
 	{
@@ -196,6 +199,10 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 		const bool needsRender = fpsLimiter.Elapsed() >= frameTickRate;
 		if (needsRender)
 		{
+			int currentFps = (int)(round(1.0f / fpsLimiter.Elapsed()));
+			fpsLimiter.Reset();
+			UpdateTitle(hwnd, currentFps);
+
 			// Lock in the time since the last render
 			g_Timer.Lock();
 
@@ -211,12 +218,6 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 
 			Render(hwnd);
 			InvalidateRect(hwnd, nullptr, false);
-
-			int currentFps = (int)(1.0f / fpsCounter.Elapsed() + .5f);
-			UpdateTitle(hwnd, currentFps);
-
-			fpsCounter.Reset();
-			fpsLimiter.Reset();
 		}
 	}
 }
@@ -266,8 +267,8 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	if (GetForegroundWindow() != hwnd) return;
 
 	const Vert3df& cameraPos = camera->GetPosition();
-	const USHORT keyDownFlag = 1 << 15;
 	const float speed = 2.0f * g_Timer.GetLockedTime();
+	const USHORT keyDownFlag = 1 << 15;
 
 	// Forward
 	if (GetKeyState('W') & keyDownFlag)
@@ -349,4 +350,11 @@ void CenterCursorPosition(HWND hwnd)
 
 	ClientToScreen(hwnd, &point);
 	SetCursorPos(point.x, point.y);
+}
+
+void ToggleViewMode()
+{
+	int mode = pSceneRenderer->GetRasterizer()->GetRasterizerMode();
+	mode = (mode + 1) % RasterizerMode::ModeCount;
+	pSceneRenderer->GetRasterizer()->SetRasterizerMode((RasterizerMode)mode);
 }

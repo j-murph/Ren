@@ -21,6 +21,8 @@ void Rasterizer::SetRasterizerMode(RasterizerMode mode)
 	case RasterizerMode::Filled:
 		CurrentModeDrawTriangle = &Rasterizer::DrawFilledTriangle;
 		break;
+	default:
+		_ASSERT_EXPR(false, TEXT("Invalid rasterizer mode."));
 	}
 }
 

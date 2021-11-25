@@ -3,9 +3,10 @@
 
 enum RasterizerMode
 {
-	Point = 1,
-	Wireframe = 2,
-	Filled = 3
+	Point = 0,
+	Wireframe = 1,
+	Filled = 2,
+	ModeCount = 3 // Must be last
 };
 
 class Rasterizer
@@ -17,7 +18,7 @@ private:
 	void DrawWireframeTriangle(const Tri2di& triangle, const SRGraphicsContext& gfx);
 	void DrawFilledTriangle(const Tri2di& triangle, const SRGraphicsContext& gfx);
 
-	void DrawScanline(int startX, int endX, int y, const SRGraphicsContext & gfx);
+	void DrawScanline(int startX, int endX, int y, const SRGraphicsContext& gfx);
 
 	void (Rasterizer::*CurrentModeDrawTriangle)(const Tri2di&, const SRGraphicsContext&);
 

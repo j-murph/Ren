@@ -29,4 +29,6 @@ public:
 
 	void SetCamera(Camera* camera);
 	Camera* GetCamera();
+
+	Rasterizer* GetRasterizer();
 };

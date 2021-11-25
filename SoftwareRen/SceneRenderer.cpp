@@ -35,6 +35,11 @@ Camera* SceneRenderer::GetCamera()
 	return camera;
 }
 
+Rasterizer* SceneRenderer::GetRasterizer()
+{
+	return rasterizer;
+}
+
 void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 {
 	const Mat4x4f& worldMatrix = mesh.GetWorldMatrix();
@@ -120,7 +125,8 @@ void SceneRenderer::DebugDrawLine(const Vert3df& p1, const Vert3df& p2, const SR
 	p1c.DivideByW();
 	p2c.DivideByW();
 
-	Vert2di rasterPoints[2] = {
+	Vert2di rasterPoints[2] = 
+	{
 		{ static_cast<int>((p1c.x + 1.0f) / 2.0f * screenWidth), static_cast<int>((p1c.y + 1.0f) / 2.0f * screenHeight) },
 		{ static_cast<int>((p2c.x + 1.0f) / 2.0f * screenWidth), static_cast<int>((p2c.y + 1.0f) / 2.0f * screenHeight) }
 	};

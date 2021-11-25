@@ -13,3 +13,4 @@ void UpdateTitle(HWND hwnd, int currentFps);
 void Render(HWND hwnd);
 void PaintToWindow(HWND hwnd);
 void CenterCursorPosition(HWND hwnd);
+void ToggleViewMode();
