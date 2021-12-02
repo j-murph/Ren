@@ -21,16 +21,16 @@ std::unique_ptr<Rasterizer> pRasterizer(std::make_unique<Rasterizer>());
 std::unique_ptr<SceneRenderer> pSceneRenderer(std::make_unique<SceneRenderer>(pRasterizer.get()));
 
 int APIENTRY wWinMain(HINSTANCE hInstance,
-					  HINSTANCE hPrevInstance,
-					  LPWSTR lpCmdLine,
-					  int nCmdShow)
+	HINSTANCE hPrevInstance,
+	LPWSTR lpCmdLine,
+	int nCmdShow)
 {
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
 	LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadStringW(hInstance, IDC_SOFTWAREREN, szWindowClass, MAX_LOADSTRING);
-	
+
 	bool registeredClass = MyRegisterClass(hInstance) != 0;
 	_ASSERT_EXPR(registeredClass, TEXT("Failed to register class."));
 
@@ -46,20 +46,18 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEXW wcex;
-
-	wcex.cbSize         = sizeof(WNDCLASSEX);
-	wcex.style          = CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc    = WndProc;
-	wcex.cbClsExtra     = 0;
-	wcex.cbWndExtra     = 0;
-	wcex.hInstance      = hInstance;
-	wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SOFTWAREREN));
-	wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
-	wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-	wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_SOFTWAREREN);
-	wcex.lpszClassName  = szWindowClass;
-	wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = WndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SOFTWAREREN));
+	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SOFTWAREREN);
+	wcex.lpszClassName = szWindowClass;
+	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 	return RegisterClassExW(&wcex);
 }
 
@@ -76,85 +74,55 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow)
 	ShowWindow(hwnd, nCmdShow);
 	UpdateWindow(hwnd);
 
-	//ShowCursor(FALSE);
-
 	return hwnd;
 }
 
 SRGraphicsContext* InitGraphics(HWND hwnd)
 {
-	SRGraphicsContext* srgc = new SRGraphicsContext(hwnd);
+	std::unique_ptr<SRGraphicsContext> srgc = std::make_unique<SRGraphicsContext>(hwnd);
 
 	RECT clientRect;
 	GetClientRect(hwnd, &clientRect);
 
 	if (!srgc->frameBuffer->Init(hwnd, clientRect.right, clientRect.bottom))
 	{
-		SAFE_FREE(srgc);
 		return nullptr;
 	}
 
 	srgc->zBuffer->Init(clientRect.right, clientRect.bottom);
 
-	return srgc;
+	return srgc.release();
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
 	{
-		case WM_COMMAND:
-			{	/*
-				int wmId = LOWORD(wParam);
-				switch (wmId)
-				{
-				default:
-					return DefWindowProc(hwnd, message, wParam, lParam);
-				}
-				*/
-			}
-			break;
-		case WM_PAINT:
-			{
-				if (pSrgc)
-				{
-					PaintToWindow(hwnd);
-				}
-			}
-			break;
-		case WM_SIZE:
-			{
-				RECT clientRect;
-				GetClientRect(hwnd, &clientRect);
-
-				if (pSrgc)
-				{
-					bool resizeSuccess = pSrgc->frameBuffer->SetSize(clientRect.right, clientRect.bottom);
-					_ASSERT(resizeSuccess);
-					pSrgc->zBuffer->SetSize(clientRect.right, clientRect.bottom);
-				}
-
-				mainCamera.SetScreenWidth(clientRect.right);
-				mainCamera.SetScreenHeight(clientRect.bottom);
-			}
-			break;
-		case WM_KEYDOWN:
-			{
-				if (wParam == VK_ESCAPE)
-				{
-					PostQuitMessage(0);
-				}
-				else if (wParam == 'V')
-				{
-					ToggleViewMode();
-				}
-			}
-			break;
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			break;
+	case WM_COMMAND:
+	{	/*
+		int wmId = LOWORD(wParam);
+		switch (wmId)
+		{
 		default:
-			return DefWindowProc(hwnd, message, wParam, lParam);
+		return DefWindowProc(hwnd, message, wParam, lParam);
+		}
+		*/
+	}
+	break;
+	case WM_PAINT:
+		HandlePaint(hwnd);
+		break;
+	case WM_SIZE:
+		HandleWindowResize(lParam, wParam, hwnd);
+		break;
+	case WM_KEYDOWN:
+		HandleKeyDown(wParam);
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	default:
+		return DefWindowProc(hwnd, message, wParam, lParam);
 	}
 	return 0;
 }
@@ -163,13 +131,15 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 {
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SOFTWAREREN));
 
-	Mesh mesh;
-	bool meshLoaded = mesh.LoadFromFile("..\\Assets\\Models\\libertstatue.obj");
+	Mesh objMesh, cubeMesh;
+	bool meshLoaded = objMesh.LoadFromFile("..\\Assets\\Models\\libertstatue.obj");
 	_ASSERT_EXPR(meshLoaded, TEXT("Failed to load mesh"));
-	pSceneRenderer->GetRasterizer()->SetRasterizerMode(RasterizerMode::Wireframe);
+	cubeMesh.CreateCube(.5);
 
-	mesh.SetPosition({ 0, 0, 2 });
-	pSceneRenderer->AddObjectToScene(&mesh);
+	objMesh.SetPosition({ 0, 0, 0 });
+	cubeMesh.SetPosition({ 0, 0, 0 });
+	pSceneRenderer->AddObjectToScene(&cubeMesh);
+	pSceneRenderer->AddObjectToScene(&objMesh);
 
 	mainCamera.SetPosition({ 0, 0, 5 });
 	mainCamera.LookAt({ 0, 0, 0 });
@@ -211,7 +181,8 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 
 			static float inc = 0.0f;
 			inc += 0.1f * g_Timer.GetLockedTime();
-			mesh.SetRotation({ inc / 2.5f, inc / 2, inc });
+			objMesh.SetRotation({ inc / 2.5f, inc / 2, inc });
+			cubeMesh.SetPosition({ 0, -1, 0 });
 
 			// Start record of the most recent render
 			g_Timer.Reset();
@@ -225,23 +196,22 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 void Render(HWND hwnd)
 {
 	if (!pSrgc) return;
+
 	pSrgc->frameBuffer->Clear({ 0, 0, 0 });
 	pSceneRenderer->RenderScene(*pSrgc);
 }
 
-void PaintToWindow(HWND hwnd)
+void HandlePaint(HWND hwnd)
 {
-	PAINTSTRUCT ps;
-	HDC hdc = BeginPaint(hwnd, &ps);
+	if (!pSrgc) return;
 
 	RECT clientRect;
 	GetClientRect(hwnd, &clientRect);
 
-	HDC memDc = CreateCompatibleDC(hdc);
-	HBITMAP hBm = CreateCompatibleBitmap(hdc, clientRect.right, clientRect.bottom);
-	SelectObject(memDc, hBm);
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(hwnd, &ps);
 
-	pSrgc->frameBuffer->Draw(memDc);
+	pSrgc->frameBuffer->Draw(hdc);
 
 	const Vert3df& cameraPos = mainCamera.GetPosition();
 	const Vert3df& lookAt = mainCamera.GetLookDirection();
@@ -250,14 +220,9 @@ void PaintToWindow(HWND hwnd)
 	int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
 		cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
-	SetTextColor(memDc, 0x00FFFFFF);
-	SetBkColor(memDc, TRANSPARENT);
-	DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
-
-	BitBlt(hdc, 0, 0, clientRect.right, clientRect.bottom, memDc, 0, 0, SRCCOPY);
-
-	DeleteObject(hBm);
-	DeleteDC(memDc);
+	SetTextColor(hdc, 0x00FFFFFF);
+	SetBkColor(hdc, TRANSPARENT);
+	DrawText(hdc, szCameraPos, characterCount, &clientRect, 0);
 
 	EndPaint(hwnd, &ps);
 }
@@ -317,11 +282,11 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	bool mouseHasMoved = cursorPos.x != screenCenter.x || cursorPos.y != screenCenter.y;
 	if (mouseHasMoved)
 	{
-		Vec2df vecDirection(cursorPos.x - screenCenter.x, cursorPos.y - screenCenter.y);
+	Vec2df vecDirection(cursorPos.x - screenCenter.x, cursorPos.y - screenCenter.y);
 
 
-		// Re-center mouse position
-		CenterCursorPosition(hwnd);
+	// Re-center mouse position
+	CenterCursorPosition(hwnd);
 	}
 	*/
 }
@@ -357,4 +322,39 @@ void ToggleViewMode()
 	int mode = pSceneRenderer->GetRasterizer()->GetRasterizerMode();
 	mode = (mode + 1) % RasterizerMode::ModeCount;
 	pSceneRenderer->GetRasterizer()->SetRasterizerMode((RasterizerMode)mode);
+}
+
+void HandleWindowResize(LPARAM lParam, WPARAM wParam, HWND hwnd)
+{
+	const WORD newWidth = LOWORD(lParam), newHeight = HIWORD(lParam);
+	const bool dimensionsChanged = newWidth != mainCamera.GetViewportWidth() || newHeight != mainCamera.GetViewportHeight();
+	const bool windowMinimized = wParam == SIZE_MINIMIZED;
+
+	if (dimensionsChanged && !windowMinimized)
+	{
+		RECT clientRect;
+		GetClientRect(hwnd, &clientRect);
+
+		if (pSrgc)
+		{
+			bool resizeSuccess = pSrgc->frameBuffer->SetSize(clientRect.right, clientRect.bottom);
+			_ASSERT(resizeSuccess);
+			pSrgc->zBuffer->SetSize(clientRect.right, clientRect.bottom);
+		}
+
+		mainCamera.SetViewportWidth(clientRect.right);
+		mainCamera.SetViewportHeight(clientRect.bottom);
+	}
+}
+
+void HandleKeyDown(WPARAM wParam)
+{
+	if (wParam == VK_ESCAPE)
+	{
+		PostQuitMessage(0);
+	}
+	else if (wParam == 'V')
+	{
+		ToggleViewMode();
+	}
 }

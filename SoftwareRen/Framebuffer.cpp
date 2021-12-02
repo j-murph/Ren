@@ -13,7 +13,6 @@ Framebuffer::~Framebuffer()
 bool Framebuffer::Init(HWND targetWindow, int width, int height)
 {
 	this->targetWindow = targetWindow;
-	targetWindowHdc = GetDC(this->targetWindow);
 	return SetSize(width, height);
 }
 
@@ -21,11 +20,10 @@ bool Framebuffer::SetSize(int width, int height)
 {
 	this->width = width;
 	this->height = height;
+	
+	Free();
 
-	if (bitmap)
-	{
-		Free();
-	}
+	targetWindowHdc = GetDC(this->targetWindow);
 
 	ZeroMemory(&bmInfo, sizeof(bmInfo));
 	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -54,12 +52,12 @@ void Framebuffer::Clear(Color color)
 	}
 }
 
-void Framebuffer::Draw(HDC drawToHdc)
+void Framebuffer::Draw(HDC hdc)
 {
-	HDC dc = CreateCompatibleDC(drawToHdc);
-	SelectObject(dc, bitmap);
-	BitBlt(drawToHdc, 0, 0, width, height, dc, 0, 0, SRCCOPY);
-	DeleteDC(dc);
+	HDC memDc = CreateCompatibleDC(hdc);
+	SelectObject(memDc, bitmap);
+	BitBlt(hdc, 0, 0, width, height, memDc, 0, 0, SRCCOPY);
+	DeleteDC(memDc);
 }
 
 void Framebuffer::Free()

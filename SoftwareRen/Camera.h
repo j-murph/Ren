@@ -25,8 +25,8 @@ private:
 	float nearPlane;
 	float farPlane;
 
-	int screenWidth;
-	int screenHeight;
+	int viewportWidth;
+	int viewportHeight;
 
 	void UpdateProjectionMatrix();
 
@@ -51,11 +51,11 @@ public:
 	void SetFOV(float fov);
 	float GetFOV();
 
-	void SetScreenWidth(int width);
-	int GetScreenWidth();
+	void SetViewportWidth(int width);
+	int GetViewportWidth();
 
-	void SetScreenHeight(int height);
-	int GetScreenHeight();
+	void SetViewportHeight(int height);
+	int GetViewportHeight();
 
 	void SetNearPlane(float nearPlane);
 	float GetNearPlane();

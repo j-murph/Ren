@@ -27,7 +27,7 @@ public:
 
 	inline void PutPixel(const int& x, const int& y, const Color& color);
 
-	void Draw(HDC drawToHdc);
+	void Draw(HDC srcHdc);
 
 	void Free();
 

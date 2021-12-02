@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Camera.h"
 
-Camera::Camera() : screenWidth(1), screenHeight(1), position(0, 0, 1), lookAt(0, 0, 0), up(0, 1, 0)
+Camera::Camera() : viewportWidth(1), viewportHeight(1), position(0, 0, 1), lookAt(0, 0, 0), up(0, 1, 0)
 {
 	viewMatrix.Identity();
 	SetNearPlane(0.1f);
@@ -72,26 +72,26 @@ float Camera::GetFOV()
 	return fov;
 }
 
-void Camera::SetScreenWidth(int width)
+void Camera::SetViewportWidth(int width)
 {
-	screenWidth = width;
+	viewportWidth = width;
 	UpdateProjectionMatrix();
 }
 
-int Camera::GetScreenWidth()
+int Camera::GetViewportWidth()
 {
-	return screenWidth;
+	return viewportWidth;
 }
 
-void Camera::SetScreenHeight(int height)
+void Camera::SetViewportHeight(int height)
 {
-	screenHeight = height;
+	viewportHeight = height;
 	UpdateProjectionMatrix();
 }
 
-int Camera::GetScreenHeight()
+int Camera::GetViewportHeight()
 {
-	return screenHeight;
+	return viewportHeight;
 }
 
 void Camera::SetNearPlane(float nearPlane)
@@ -154,7 +154,7 @@ void Camera::LookAt(const Vert3df& at)
 
 void Camera::UpdateProjectionMatrix()
 {
-	const float aspectRatio = screenWidth / (float)screenHeight;
+	const float aspectRatio = viewportWidth / (float)viewportHeight;
 
 	float tanHalfFOV = std::tan(fov / 2.0f);
 	float zRange = nearPlane - farPlane;
