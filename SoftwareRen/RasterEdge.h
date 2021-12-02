@@ -25,7 +25,7 @@ struct RasterEdge
 
 	bool Next(Vert2di& out)
 	{
-		if (currentDistance == length)
+		if (currentDistance >= length)
 			return false;
 
 		out.x = start.x + (int)(direction.x * currentDistance);

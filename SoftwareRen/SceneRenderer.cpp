@@ -70,7 +70,8 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 			}
 		}
 
-		//DebugDrawNormal(tri, worldMatrix, gfx);
+		if (gfx.options.drawNormals)
+			DebugDrawNormal(tri, worldMatrix, gfx);
 
 		p1c = vp * p1c;
 		p2c = vp * p2c;
@@ -107,7 +108,7 @@ void SceneRenderer::DebugDrawNormal(const Tri3df& tri, const Mat4x4f& worldMatri
 	Tri3df worldTri = { p1m.x, p1m.y, p1m.z, p2m.x, p2m.y, p2m.z, p3m.x, p3m.y, p3m.z };
 
 	Vert3df vertCenterPoint = worldTri.GetCenter();
-	Vert3df normalOffset = worldTri.GetNormal() * .1f;
+	Vert3df normalOffset = worldTri.GetNormal() * .13f;
 	Vert3df vertEndPoint = vertCenterPoint + normalOffset;
 
 	DebugDrawLine(vertCenterPoint, vertEndPoint, gfx);

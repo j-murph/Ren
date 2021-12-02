@@ -166,7 +166,7 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 		}
 
 		const float frameTickRate = 1.0f / MAX_FPS;
-		const bool needsRender = fpsLimiter.Elapsed() >= frameTickRate;
+		const bool needsRender = true;//fpsLimiter.Elapsed() >= frameTickRate;
 		if (needsRender)
 		{
 			int currentFps = (int)(round(1.0f / fpsLimiter.Elapsed()));
@@ -180,7 +180,7 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 			UpdateCamera(hwnd, &mainCamera);
 
 			static float inc = 0.0f;
-			inc += 0.1f * g_Timer.GetLockedTime();
+			inc += 0.65f * g_Timer.GetLockedTime();
 			objMesh.SetRotation({ inc / 2.5f, inc / 2, inc });
 			cubeMesh.SetPosition({ 0, -1, 0 });
 
@@ -349,12 +349,19 @@ void HandleWindowResize(LPARAM lParam, WPARAM wParam, HWND hwnd)
 
 void HandleKeyDown(WPARAM wParam)
 {
-	if (wParam == VK_ESCAPE)
+	switch (wParam)
 	{
+	case VK_ESCAPE:
 		PostQuitMessage(0);
-	}
-	else if (wParam == 'V')
-	{
+		break;
+	case 'V':
 		ToggleViewMode();
+		break;
+	case 'C':
+		pSrgc->options.cullBackfaces = !pSrgc->options.cullBackfaces;
+		break;
+	case 'N':
+		pSrgc->options.drawNormals = !pSrgc->options.drawNormals;
+		break;
 	}
 }
