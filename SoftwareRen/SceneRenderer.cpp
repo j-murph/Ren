@@ -128,6 +128,8 @@ void SceneRenderer::DebugDrawLine(const Vert3df& p1, const Vert3df& p2, const SR
 	p1c.DivideByW();
 	p2c.DivideByW();
 
+	if (p1c.w <= 0.0f || p2c.w <= 0.0f) return;
+
 	Vert2di rasterPoints[2] = 
 	{
 		{ static_cast<int>((p1c.x + 1.0f) / 2.0f * screenWidth), static_cast<int>((p1c.y + 1.0f) / 2.0f * screenHeight) },
