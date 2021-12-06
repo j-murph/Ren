@@ -166,7 +166,7 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 		}
 
 		const float frameTickRate = 1.0f / MAX_FPS;
-		const bool needsRender = true;//fpsLimiter.Elapsed() >= frameTickRate;
+		const bool needsRender = fpsLimiter.Elapsed() >= frameTickRate;
 		if (needsRender)
 		{
 			int currentFps = (int)(round(1.0f / fpsLimiter.Elapsed()));
