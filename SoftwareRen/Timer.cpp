@@ -10,26 +10,14 @@ Timer::Timer() : lockedTime(0.0f)
 
 void Timer::Reset()
 {
-	if (!QueryPerformanceCounter(&lastUpdate))
-	{
-		_ASSERT_EXPR(false, TEXT("QueryPerformanceCounter() failed."));
-	}
-
-	if (!QueryPerformanceFrequency(&frequency))
-	{
-		_ASSERT_EXPR(false, TEXT("QueryPerformanceCounter() failed."));
-	}
+	lastUpdate = clock.now();
 }
 
 float Timer::Elapsed()
 {
-	LARGE_INTEGER current;
-	if (!QueryPerformanceCounter(&current))
-	{
-		_ASSERT_EXPR(false, TEXT("QueryPerformanceCounter() failed."));
-	}
-
-	return static_cast<float>(current.QuadPart - lastUpdate.QuadPart) / frequency.QuadPart;
+	auto elapsed = clock.now() - lastUpdate;
+	auto elapsedMicrosenconds = std::chrono::duration_cast<std::chrono::microseconds>(clock.now() - lastUpdate);
+	return elapsedMicrosenconds.count() / 1000000.0f;
 }
 
 float Timer::Lock()
