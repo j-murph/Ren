@@ -12,7 +12,7 @@ struct SRGraphicsContext
 	struct
 	{
 		std::atomic<bool> cullBackfaces = true;
-		std::atomic<bool> drawNormals = true;
+		std::atomic<bool> drawNormals = false;
 	} options;
 
 	SRGraphicsContext(HWND targetWindow) : frameBuffer(std::make_unique<Framebuffer>()),

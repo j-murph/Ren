@@ -301,7 +301,7 @@ void UpdateTitle(HWND hwnd, int currentFps)
 		lastUpdate.Reset();
 
 		WCHAR title[256] = { 0 };
-		wsprintf(title, TEXT("%s - %i FPS"), szTitle, currentFps);
+		swprintf_s(title, 256, TEXT("%s - %i FPS"), szTitle, currentFps);
 		SetWindowText(hwnd, title);
 	}
 }
