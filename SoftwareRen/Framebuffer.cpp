@@ -1,30 +1,32 @@
 #include "stdafx.h"
-#include "Framebuffer.h"
+#include "FrameBuffer.h"
 
-Framebuffer::Framebuffer() : targetWindow(nullptr), targetWindowHdc(nullptr), bitmap(nullptr), width(0), height(0)
+FrameBuffer::FrameBuffer() : targetWindow(nullptr), memDc(nullptr),
+	frontBufferBitmap(nullptr), width(0), height(0)
 {
 }
 
-Framebuffer::~Framebuffer()
+FrameBuffer::~FrameBuffer()
 {
 	Free();
 }
 
-bool Framebuffer::Init(HWND targetWindow, int width, int height)
+bool FrameBuffer::Init(HWND targetWindow, int width, int height)
 {
 	this->targetWindow = targetWindow;
 	return SetSize(width, height);
 }
 
-bool Framebuffer::SetSize(int width, int height)
+bool FrameBuffer::SetSize(int width, int height)
 {
 	this->width = width;
 	this->height = height;
 	
 	Free();
 
-	targetWindowHdc = GetDC(this->targetWindow);
+	HDC targetWindowHdc = GetDC(targetWindow);
 
+	BITMAPINFO bmInfo;
 	ZeroMemory(&bmInfo, sizeof(bmInfo));
 	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmInfo.bmiHeader.biBitCount = 32;
@@ -33,12 +35,13 @@ bool Framebuffer::SetSize(int width, int height)
 	bmInfo.bmiHeader.biPlanes = 1;
 	bmInfo.bmiHeader.biCompression = BI_RGB;
 
-	bitmap = CreateDIBSection(targetWindowHdc, &bmInfo, DIB_RGB_COLORS, &pixels, nullptr, 0);
+	frontBufferBitmap = CreateDIBSection(targetWindowHdc, &bmInfo, DIB_RGB_COLORS, &pixels, nullptr, 0);
+	ReleaseDC(targetWindow, targetWindowHdc);
 
-	return bitmap != nullptr;
+	return frontBufferBitmap != nullptr;
 }
 
-void Framebuffer::Clear(Color color)
+void FrameBuffer::Clear(Color color)
 {
 	DWORD value = (color.b) | (color.g << 8) | (color.r << 16);
 	DWORD* curPixel = static_cast<DWORD*>(pixels);
@@ -52,35 +55,37 @@ void Framebuffer::Clear(Color color)
 	}
 }
 
-void Framebuffer::Draw(HDC hdc)
+HDC FrameBuffer::BeginDraw(HDC hdc)
 {
-	HDC memDc = CreateCompatibleDC(hdc);
-	SelectObject(memDc, bitmap);
+	_ASSERT_EXPR(memDc == nullptr, TEXT("EndDraw() must be called after calling BeginDraw()."));
+	memDc = CreateCompatibleDC(hdc);
+	SelectObject(memDc, frontBufferBitmap);
+	return memDc;
+}
+
+void FrameBuffer::EndDraw(HDC hdc)
+{
+	_ASSERT_EXPR(memDc != nullptr, TEXT("EndDraw() called before calling BeginDraw()."));
 	BitBlt(hdc, 0, 0, width, height, memDc, 0, 0, SRCCOPY);
 	DeleteDC(memDc);
+	memDc = nullptr;
 }
 
-void Framebuffer::Free()
+void FrameBuffer::Free()
 {
-	if (bitmap)
+	if (frontBufferBitmap)
 	{
-		DeleteObject(bitmap);
-		bitmap = nullptr;
-	}
-
-	if (targetWindowHdc)
-	{
-		ReleaseDC(targetWindow, targetWindowHdc);
-		targetWindowHdc = nullptr;
+		DeleteObject(frontBufferBitmap);
+		frontBufferBitmap = nullptr;
 	}
 }
 
-int Framebuffer::GetWidth() const
+int FrameBuffer::GetWidth() const
 {
 	return width;
 }
 
-int Framebuffer::GetHeight() const
+int FrameBuffer::GetHeight() const
 {
 	return height;
 }

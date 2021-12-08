@@ -210,8 +210,7 @@ void HandlePaint(HWND hwnd)
 
 	PAINTSTRUCT ps;
 	HDC hdc = BeginPaint(hwnd, &ps);
-
-	pSrgc->frameBuffer->Draw(hdc);
+	HDC memDc = pSrgc->frameBuffer->BeginDraw(hdc);
 
 	const Vert3df& cameraPos = mainCamera.GetPosition();
 	const Vert3df& lookAt = mainCamera.GetLookDirection();
@@ -220,10 +219,11 @@ void HandlePaint(HWND hwnd)
 	int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
 		cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
-	SetTextColor(hdc, 0x00FFFFFF);
-	SetBkColor(hdc, TRANSPARENT);
-	DrawText(hdc, szCameraPos, characterCount, &clientRect, 0);
+	SetTextColor(memDc, 0x00FFFFFF);
+	SetBkColor(memDc, TRANSPARENT);
+	DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
 
+	pSrgc->frameBuffer->EndDraw(hdc);
 	EndPaint(hwnd, &ps);
 }
 

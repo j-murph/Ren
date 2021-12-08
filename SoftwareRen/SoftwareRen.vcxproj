@@ -140,7 +140,7 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
-      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
       <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
@@ -174,7 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Framebuffer.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="RenderObject.cpp" />

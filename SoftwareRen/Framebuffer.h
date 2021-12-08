@@ -1,14 +1,13 @@
 #pragma once
 #include "Color.h"
 
-class Framebuffer
+class FrameBuffer
 {
 private:
-	HBITMAP bitmap;
-	BITMAPINFO bmInfo;
+	HBITMAP frontBufferBitmap; // Raw pixels are drawn to this bitmap
 
 	HWND targetWindow;
-	HDC targetWindowHdc;
+	HDC memDc;
 
 	void* pixels;
 
@@ -16,8 +15,8 @@ private:
 	int height;
 
 public:
-	Framebuffer();
-	~Framebuffer();
+	FrameBuffer();
+	~FrameBuffer();
 
 	bool Init(HWND targetWindow, int width, int height);
 
@@ -27,7 +26,8 @@ public:
 
 	inline void PutPixel(const int& x, const int& y, const Color& color);
 
-	void Draw(HDC srcHdc);
+	HDC BeginDraw(HDC hdc);
+	void EndDraw(HDC hdc);
 
 	void Free();
 
@@ -35,7 +35,7 @@ public:
 	int GetHeight() const;
 };
 
-void Framebuffer::PutPixel(const int& x, const int& y, const Color& color)
+void FrameBuffer::PutPixel(const int& x, const int& y, const Color& color)
 {
 	if (x < 0 || y < 0) return;
 	if (x >= width || y >= height) return;
