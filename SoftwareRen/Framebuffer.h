@@ -22,7 +22,7 @@ public:
 
 	bool SetSize(int width, int height);
 
-	void Clear(Color color);
+	void Clear(const Color& color);
 
 	inline void PutPixel(const int& x, const int& y, const Color& color);
 

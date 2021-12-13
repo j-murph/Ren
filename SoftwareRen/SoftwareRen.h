@@ -10,7 +10,7 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 int	MessageLoop(HWND hwnd, HINSTANCE hInstance);
 void UpdateCamera(HWND hwnd, Camera* camera);
 void UpdateTitle(HWND hwnd, int currentFps);
-void Render(HWND hwnd);
+void Render();
 void HandlePaint(HWND hwnd);
 void CenterCursorPosition(HWND hwnd);
 void ToggleViewMode();

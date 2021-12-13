@@ -1,8 +1,8 @@
 #include "stdafx.h"
-#include "Mesh.h"
-#include "Tokenizer.h"
 #include <string>
 #include <fstream>
+#include "Mesh.h"
+#include "Tokenizer.h"
 
 #define OBJ_COMMENT_CHAR '#'
 #define OBJ_WHITESPACE_CHAR ' '

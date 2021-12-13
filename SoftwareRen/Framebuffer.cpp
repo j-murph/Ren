@@ -24,8 +24,6 @@ bool FrameBuffer::SetSize(int width, int height)
 	
 	Free();
 
-	HDC targetWindowHdc = GetDC(targetWindow);
-
 	BITMAPINFO bmInfo;
 	ZeroMemory(&bmInfo, sizeof(bmInfo));
 	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -35,23 +33,21 @@ bool FrameBuffer::SetSize(int width, int height)
 	bmInfo.bmiHeader.biPlanes = 1;
 	bmInfo.bmiHeader.biCompression = BI_RGB;
 
+	HDC targetWindowHdc = GetDC(targetWindow);
 	frontBufferBitmap = CreateDIBSection(targetWindowHdc, &bmInfo, DIB_RGB_COLORS, &pixels, nullptr, 0);
 	ReleaseDC(targetWindow, targetWindowHdc);
 
 	return frontBufferBitmap != nullptr;
 }
 
-void FrameBuffer::Clear(Color color)
+void FrameBuffer::Clear(const Color& color)
 {
 	DWORD value = (color.b) | (color.g << 8) | (color.r << 16);
 	DWORD* curPixel = static_cast<DWORD*>(pixels);
-	for (int x = 0; x < width; x++)
+	for (int i = 0; i < width * height; i++)
 	{
-		for (int y = 0; y < height; y++)
-		{
-			*curPixel = value;
-			curPixel++;
-		}
+		*curPixel = value;
+		curPixel++;
 	}
 }
 

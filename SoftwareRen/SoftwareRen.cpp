@@ -1,8 +1,4 @@
-// SoftwareRen.cpp : Defines the entry point for the application.
-//
-
 #include "stdafx.h"
-#include <wchar.h>
 #include "SoftwareRen.h"
 #include "Rasterizer.h"
 #include "SceneRenderer.h"
@@ -187,13 +183,13 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 			// Start record of the most recent render
 			g_Timer.Reset();
 
-			Render(hwnd);
+			Render();
 			InvalidateRect(hwnd, nullptr, false);
 		}
 	}
 }
 
-void Render(HWND hwnd)
+void Render()
 {
 	if (!pSrgc) return;
 
