@@ -33,7 +33,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	HWND hwnd = InitWindow(hInstance, nCmdShow);
 	_ASSERT_EXPR(hwnd != nullptr, TEXT("Failed to initialise window."));
 
-	pSrgc.reset(InitGraphics(hwnd));
+	pSrgc = InitGraphics(hwnd);
 	_ASSERT_EXPR(pSrgc.get() != nullptr, TEXT("Failed to create graphics context."));
 
 	return MessageLoop(hwnd, hInstance);
@@ -73,7 +73,7 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow)
 	return hwnd;
 }
 
-SRGraphicsContext* InitGraphics(HWND hwnd)
+std::unique_ptr<SRGraphicsContext> InitGraphics(HWND hwnd)
 {
 	std::unique_ptr<SRGraphicsContext> srgc = std::make_unique<SRGraphicsContext>(hwnd);
 
@@ -87,7 +87,7 @@ SRGraphicsContext* InitGraphics(HWND hwnd)
 
 	srgc->zBuffer->Init(clientRect.right, clientRect.bottom);
 
-	return srgc.release();
+	return srgc;
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)

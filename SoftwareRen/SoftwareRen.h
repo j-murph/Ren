@@ -5,7 +5,7 @@
 
 ATOM MyRegisterClass(HINSTANCE hInstance);
 HWND InitWindow(HINSTANCE hInstance, int nCmdShow);
-SRGraphicsContext* InitGraphics(HWND hwnd);
+std::unique_ptr<SRGraphicsContext> InitGraphics(HWND hwnd);
 LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 int	MessageLoop(HWND hwnd, HINSTANCE hInstance);
 void UpdateCamera(HWND hwnd, Camera* camera);
