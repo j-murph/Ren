@@ -175,22 +175,22 @@ void Camera::Move(MoveDirection direction, float units)
 
 	switch (direction)
 	{
-	case MoveDirection::Forward:
+	case MoveDirection::FORWARD:
 		SetPosition(position + zAxis * units);
 		break;
-	case MoveDirection::Backward:
+	case MoveDirection::BACKWARD:
 		SetPosition(position - zAxis * units);
 		break;
-	case MoveDirection::Left:
+	case MoveDirection::LEFT:
 		SetPosition(position - xAxis * units);
 		break;
-	case MoveDirection::Right:
+	case MoveDirection::RIGHT:
 		SetPosition(position + xAxis * units);
 		break;
-	case MoveDirection::Up:
+	case MoveDirection::UP:
 		SetPosition(position + up * units);
 		break;
-	case MoveDirection::Down:
+	case MoveDirection::DOWN:
 		SetPosition(position - up * units);
 		break;
 	}

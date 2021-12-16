@@ -18,7 +18,7 @@ void SceneRenderer::RenderScene(const SRGraphicsContext& gfx)
 	{
 		switch (object->GetType())
 		{
-		case RenderObjectType::Mesh:
+		case RenderObjectType::MESH:
 			DrawMesh(*(Mesh*)object, gfx);
 			break;
 		}

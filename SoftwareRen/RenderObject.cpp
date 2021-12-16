@@ -5,10 +5,6 @@ RenderObject::RenderObject() : position(0, 0, 0), rotation(0, 0, 0)
 {
 }
 
-RenderObject::~RenderObject()
-{
-}
-
 Mat4x4f RenderObject::GetWorldMatrix()
 {
 	Mat4x4f rotXMat;

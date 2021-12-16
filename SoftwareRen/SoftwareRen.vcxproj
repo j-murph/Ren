@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="GlobalConstants.h" />
     <ClInclude Include="Framebuffer.h" />
     <ClInclude Include="Color.h" />
     <ClInclude Include="Fun.h" />

@@ -12,7 +12,7 @@
 
 RenderObjectType Mesh::GetType()
 {
-	return RenderObjectType::Mesh;
+	return RenderObjectType::MESH;
 }
 
 std::vector<Tri3df>& Mesh::GetTriangles()
@@ -42,10 +42,10 @@ bool Mesh::LoadFromFile(const std::string& filename)
 
 			if (spec == OBJ_VERTEX_STR)
 			{
-				vertices.push_back({
+				vertices.emplace_back(
 					tkn.ParseToken<float>(1),
 					tkn.ParseToken<float>(2),
-					tkn.ParseToken<float>(3) });
+					tkn.ParseToken<float>(3));
 			}
 			else if (spec == OBJ_FACE_STR)
 			{
@@ -86,6 +86,8 @@ bool Mesh::LoadFromFile(const std::string& filename)
 					}
 				}
 			}
+
+			tkn.Clear();
 		}
 		catch (const std::out_of_range&)
 		{
@@ -96,8 +98,6 @@ bool Mesh::LoadFromFile(const std::string& filename)
 			const char* msg = n.what();
 			_ASSERT_EXPR(false, msg);
 		}
-
-		tkn.Clear();
 	}
 
 	return true;

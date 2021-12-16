@@ -40,6 +40,6 @@ void RenderRotTri(HWND hwnd, Rasterizer* raster, SRGraphicsContext* pSrgc)
 		verts[i].y += translateVector.y;
 	}
 
-	raster->SetRasterizerMode(RasterizerMode::Wireframe);
+	raster->SetRasterizerMode(RasterizerMode::WIRE_FRAME);
 	raster->DrawTriangle(Tri2di(verts[0].x, verts[0].y, verts[1].x, verts[1].y, verts[2].x, verts[2].y), *pSrgc);
 }

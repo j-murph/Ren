@@ -2,7 +2,7 @@
 #include <math.h>
 
 #define PI 3.14159265358f
-#define DEG_TO_RAD(deg) ((deg * PI) / 180.0f)
+#define DEG_TO_RAD(deg) ((PI / 180.0f) * deg)
 #define TWO_THIRDSF (2.0 / 3.0f)
 
 template <class T>

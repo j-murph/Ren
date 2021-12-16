@@ -9,6 +9,7 @@
 #include <wchar.h>
 #include <ppl.h>
 
+#include "GlobalConstants.h"
 #include "Win32Helpers.h"
 #include "Macros.h"
 #include "Timer.h"

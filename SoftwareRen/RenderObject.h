@@ -3,8 +3,8 @@
 
 enum class RenderObjectType
 {
-	Mesh = 1,
-	Billboard = 2
+	MESH = 1,
+	BILLBOARD = 2
 };
 
 class RenderObject
@@ -16,7 +16,7 @@ private:
 
 public:
 	RenderObject();
-	virtual ~RenderObject();
+	virtual ~RenderObject() = default;
 
 	virtual Mat4x4f GetWorldMatrix();
 	virtual RenderObjectType GetType() = 0;

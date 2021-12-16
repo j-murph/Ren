@@ -4,7 +4,7 @@
 
 Rasterizer::Rasterizer()
 {
-	SetRasterizerMode(RasterizerMode::Filled);
+	SetRasterizerMode(RasterizerMode::FILLED);
 }
 
 void Rasterizer::SetRasterizerMode(RasterizerMode mode)
@@ -12,13 +12,13 @@ void Rasterizer::SetRasterizerMode(RasterizerMode mode)
 	this->mode = mode;
 	switch (this->mode)
 	{
-	case RasterizerMode::Point:
+	case RasterizerMode::POINT:
 		CurrentModeDrawTriangle = &Rasterizer::DrawPointTriangle;
 		break;
-	case RasterizerMode::Wireframe:
+	case RasterizerMode::WIRE_FRAME:
 		CurrentModeDrawTriangle = &Rasterizer::DrawWireframeTriangle;
 		break;
-	case RasterizerMode::Filled:
+	case RasterizerMode::FILLED:
 		CurrentModeDrawTriangle = &Rasterizer::DrawFilledTriangle;
 		break;
 	default:

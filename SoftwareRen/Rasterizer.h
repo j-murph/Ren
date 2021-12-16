@@ -1,12 +1,12 @@
 #pragma once
 #include "GraphicsContext.h"
 
-enum RasterizerMode
+enum class RasterizerMode
 {
-	Point = 0,
-	Wireframe = 1,
-	Filled = 2,
-	ModeCount = 3 // Must be last
+	POINT = 0,
+	WIRE_FRAME = 1,
+	FILLED = 2,
+	MODE_COUNT = 3 // Must be last
 };
 
 class Rasterizer

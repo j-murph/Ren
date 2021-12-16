@@ -3,12 +3,12 @@
 
 enum class MoveDirection
 {
-	Forward,
-	Backward,
-	Left,
-	Right,
-	Up,
-	Down
+	FORWARD,
+	BACKWARD,
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN
 };
 
 class Camera

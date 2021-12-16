@@ -3,9 +3,7 @@
 #include "Rasterizer.h"
 #include "SceneRenderer.h"
 
-#define MAX_LOADSTRING 100
-#define MAX_FPS 60
-#define MOUSE_SENSITIVITY 2.0f
+constexpr int MAX_LOADSTRING = 100;
 
 WCHAR szTitle[MAX_LOADSTRING];
 WCHAR szWindowClass[MAX_LOADSTRING];
@@ -161,11 +159,11 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 				return (int)msg.wParam;
 		}
 
-		const float frameTickRate = 1.0f / MAX_FPS;
-		const bool needsRender = fpsLimiter.Elapsed() >= frameTickRate;
+		const float elapsed = fpsLimiter.Elapsed();
+		const bool needsRender = elapsed >= frameTickRate;
 		if (needsRender)
 		{
-			int currentFps = (int)(round(1.0f / fpsLimiter.Elapsed()));
+			int currentFps = (int)(round(1.0f / elapsed));
 			fpsLimiter.Reset();
 			UpdateTitle(hwnd, currentFps);
 
@@ -234,37 +232,37 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	// Forward
 	if (GetKeyState('W') & keyDownFlag)
 	{
-		camera->Move(MoveDirection::Forward, speed);
+		camera->Move(MoveDirection::FORWARD, speed);
 	}
 
 	// Backward
 	if (GetKeyState('S') & keyDownFlag)
 	{
-		camera->Move(MoveDirection::Backward, speed);
+		camera->Move(MoveDirection::BACKWARD, speed);
 	}
 
 	// Left
 	if (GetKeyState('A') & keyDownFlag)
 	{
-		camera->Move(MoveDirection::Left, speed);
+		camera->Move(MoveDirection::LEFT, speed);
 	}
 
 	// Right
 	if (GetKeyState('D') & keyDownFlag)
 	{
-		camera->Move(MoveDirection::Right, speed);
+		camera->Move(MoveDirection::RIGHT, speed);
 	}
 
 	// Up
 	if (GetKeyState(VK_LSHIFT) & keyDownFlag)
 	{
-		camera->Move(MoveDirection::Up, speed);
+		camera->Move(MoveDirection::UP, speed);
 	}
 
 	// Down
 	if (GetKeyState(VK_LCONTROL) & keyDownFlag)
 	{
-		camera->Move(MoveDirection::Down, speed);
+		camera->Move(MoveDirection::DOWN, speed);
 	}
 
 	// Handle mouse movement
@@ -315,8 +313,8 @@ void CenterCursorPosition(HWND hwnd)
 
 void ToggleViewMode()
 {
-	int mode = pSceneRenderer->GetRasterizer()->GetRasterizerMode();
-	mode = (mode + 1) % RasterizerMode::ModeCount;
+	RasterizerMode mode = pSceneRenderer->GetRasterizer()->GetRasterizerMode();
+	mode = (RasterizerMode)(((int)mode + 1) % (int)RasterizerMode::MODE_COUNT);
 	pSceneRenderer->GetRasterizer()->SetRasterizerMode((RasterizerMode)mode);
 }
 
