@@ -229,38 +229,40 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	const float speed = 2.0f * g_Timer.GetLockedTime();
 	const USHORT keyDownFlag = 1 << 15;
 
+	auto keyDown = [&](int key) { return GetKeyState(key) & keyDownFlag; };
+
 	// Forward
-	if (GetKeyState('W') & keyDownFlag)
+	if (keyDown('W'))
 	{
 		camera->Move(MoveDirection::FORWARD, speed);
 	}
 
 	// Backward
-	if (GetKeyState('S') & keyDownFlag)
+	if (keyDown('S'))
 	{
 		camera->Move(MoveDirection::BACKWARD, speed);
 	}
 
 	// Left
-	if (GetKeyState('A') & keyDownFlag)
+	if (keyDown('A'))
 	{
 		camera->Move(MoveDirection::LEFT, speed);
 	}
 
 	// Right
-	if (GetKeyState('D') & keyDownFlag)
+	if (keyDown('D'))
 	{
 		camera->Move(MoveDirection::RIGHT, speed);
 	}
 
 	// Up
-	if (GetKeyState(VK_LSHIFT) & keyDownFlag)
+	if (keyDown(VK_LSHIFT))
 	{
 		camera->Move(MoveDirection::UP, speed);
 	}
 
 	// Down
-	if (GetKeyState(VK_LCONTROL) & keyDownFlag)
+	if (keyDown(VK_LCONTROL))
 	{
 		camera->Move(MoveDirection::DOWN, speed);
 	}
