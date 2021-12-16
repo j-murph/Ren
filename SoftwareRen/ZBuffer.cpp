@@ -18,7 +18,7 @@ void ZBuffer::Init(int width, int height)
 
 void ZBuffer::SetSize(int width, int height)
 {
-	SAFE_FREE(buffer);
+	SAFE_FREE_ARRAY(buffer);
 
 	this->width = width;
 	this->height = height;
