@@ -160,7 +160,7 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 		}
 
 		const float elapsed = fpsLimiter.Elapsed();
-		const bool needsRender = elapsed >= frameTickRate;
+		const bool needsRender = elapsed >= FRAME_TICK_RATE;
 		if (needsRender)
 		{
 			int currentFps = (int)(round(1.0f / elapsed));
@@ -292,7 +292,7 @@ void UpdateTitle(HWND hwnd, int currentFps)
 	static Timer lastUpdate;
 
 	// Only update at 1hz
-	if (lastUpdate.Elapsed() > 1.0f)
+	if (lastUpdate.Elapsed() >= 1.0f)
 	{
 		lastUpdate.Reset();
 

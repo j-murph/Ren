@@ -4,7 +4,7 @@
 #include <vector>
 #include <sstream>
 
-const std::string emptyString = "";
+const inline std::string emptyString = "";
 
 template <class delimiterT = char>
 class Tokenizer
@@ -19,7 +19,7 @@ public:
 	{
 	}
 
-	Tokenizer(const std::string& tokenizeMe, delimiterT delimiter)
+	Tokenizer(const std::string& tokenizeMe, delimiterT delimiter) : Tokenizer(true)
 	{
 		TokenizeString(tokenizeMe, delimiter);
 	}
