@@ -8,6 +8,9 @@
 template <class T>
 struct Vector3d;
 
+template <class T, class Y>
+T Lerp(T x, T y, Y t);
+
 template <class T>
 struct Vertex2d
 {
@@ -541,10 +544,10 @@ typedef Vector3d<int>     Vec3di;
 
 typedef Matrix4x4<float> Mat4x4f;
 
-template <class T, class Y = float, class R = T>
+template <class T, class Y = float>
 T Lerp(T x, T y, Y t)
 {
-	return static_cast<R>(x + t * (y - x));
+	return static_cast<T>(x + t * (y - x));
 }
 
 bool FloatEquals(float a, float b, float epsilon = 0.000001f)

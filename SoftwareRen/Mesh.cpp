@@ -89,14 +89,9 @@ bool Mesh::LoadFromFile(const std::string& filename)
 
 			tkn.Clear();
 		}
-		catch (const std::out_of_range&)
+		catch (const std::exception&)
 		{
 			return false;
-		}
-		catch (const std::exception& n)
-		{
-			const char* msg = n.what();
-			_ASSERT_EXPR(false, msg);
 		}
 	}
 

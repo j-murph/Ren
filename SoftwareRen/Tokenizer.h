@@ -32,7 +32,7 @@ public:
 		std::string token;
 		while (std::getline(ss, token, delimiter))
 		{
-			tokens.push_back(token);
+			tokens.push_back(std::move(token));
 		}
 	}
 
@@ -41,7 +41,7 @@ public:
 	{
 		if (tokenIndex < 0 || tokenIndex >= tokens.size())
 		{
-			ThrowParserExceptionIfEnabled("Index out of range.");
+			ThrowParserExceptionIfEnabled<std::out_of_range>("Index out of range.");
 			return T();
 		}
 
@@ -51,7 +51,7 @@ public:
 		ss >> temp;
 
 		if (ss.fail())
-			ThrowParserExceptionIfEnabled("Parse failure.");
+			ThrowParserExceptionIfEnabled<std::exception>("Parse failure.");
 
 		return temp;
 	}
@@ -66,11 +66,12 @@ public:
 		return tokens;
 	}
 
+	template<class exT>
 	void ThrowParserExceptionIfEnabled(const char* message)
 	{
 		if (enableParserThrow)
 		{
-			throw std::exception(message);
+			throw exT(message);
 		}
 	}
 
@@ -78,7 +79,7 @@ public:
 	{
 		if (tokenIndex < 0 || tokenIndex >= tokens.size())
 		{
-			ThrowParserExceptionIfEnabled("Index out of range.");
+			ThrowParserExceptionIfEnabled<std::out_of_range>("Index out of range.");
 			return emptyString;
 		}
 
