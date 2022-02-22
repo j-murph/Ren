@@ -70,9 +70,6 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 			}
 		}
 
-		if (gfx.options.drawNormals)
-			DebugDrawNormal(tri, worldMatrix, gfx);
-
 		p1c = vp * p1c;
 		p2c = vp * p2c;
 		p3c = vp * p3c;
@@ -96,6 +93,9 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 		//rasterTri.p3.z = p3c.z;
 
 		rasterizer->DrawTriangle(rasterTri, gfx);
+
+		if (gfx.options.drawNormals)
+			DebugDrawNormal(tri, worldMatrix, gfx);
 	}
 }
 

@@ -137,8 +137,10 @@ void Rasterizer::DrawFilledTriangle(const Tri2di& triangle, const SRGraphicsCont
 	Vert2di pix1 = *top, pix2 = *mid;
 	RasterEdge edge1(*top, *bot), edge2(*top, *mid);
 
+	bool edgeReset = false;
+
 	int y = top->y;
-	while (y > bot->y)
+	while (y >= bot->y)
 	{
 		while (pix1.y != y)
 		{
@@ -152,7 +154,13 @@ void Rasterizer::DrawFilledTriangle(const Tri2di& triangle, const SRGraphicsCont
 		{
 			if (!edge2.Next(pix2))
 			{
-				pix2 = edge2.Reset(*mid, *bot);
+				if (!edgeReset)
+				{
+					edge2.Reset(*mid, *bot);
+					pix2 = *mid;
+					edgeReset = true;
+				}
+				
 				break;
 			}
 		}
