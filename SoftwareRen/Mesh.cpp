@@ -1,6 +1,4 @@
 #include "stdafx.h"
-#include <string>
-#include <fstream>
 #include "Mesh.h"
 #include "Tokenizer.h"
 

@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "Rasterizer.h"
 
-void RenderRotTri(HWND hwnd, Rasterizer* raster, SRGraphicsContext* pSrgc)
+inline void RenderRotTri(HWND hwnd, Rasterizer* raster, SRGraphicsContext* pSrgc)
 {
 	POINT p = GetMouseCoordinates(hwnd);
 
@@ -15,7 +15,7 @@ void RenderRotTri(HWND hwnd, Rasterizer* raster, SRGraphicsContext* pSrgc)
 	static float theta = 0.0f;
 	theta += 1.f * g_Timer.GetLockedTime();
 
-	Vert2di verts[3] = { { 0, 100 },{ -200, 0 },{ 600, 0 } };
+	Vert2di verts[3] = { { 0, 100 }, { -200, 0 },{ 600, 0 } };
 	for (int i = 0; i < 3; i++)
 	{
 		Vert2di& v = verts[i];

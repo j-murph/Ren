@@ -1,6 +1,7 @@
 #pragma once
 #include "Math.h"
 
+// TODO: Imeplement this similarily to Bresenham's algo, avoiding FP calculations
 struct RasterEdge
 {
 	Vert2di start;

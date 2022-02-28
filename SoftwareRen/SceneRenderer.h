@@ -8,7 +8,7 @@
 class SceneRenderer
 {
 private:
-	std::vector <RenderObject*> renderObjects;
+	std::vector<RenderObject*> renderObjects;
 	
 	Rasterizer* rasterizer;
 
