@@ -348,29 +348,26 @@ struct Matrix4x4
 		T f[16];
 	};
 
-	Matrix4x4()
-	{
-		a[0][0] = 0;
-	}
+	Matrix4x4() = default;
 
 	Matrix4x4(const Matrix4x4<T>& other)
 	{
-		memcpy(a, other.a, sizeof(T) * 4 * 4);
+		memcpy(a, other.a, sizeof(f));
 	}
 
 	Matrix4x4(const T elements[16])
 	{
-		memcpy(a, elements, sizeof(T) * 16);
+		memcpy(a, elements, sizeof(f));
 	}
 
 	void Zero()
 	{
-		ZeroMemory(a, sizeof(T) * 4 * 4);
+		memset(a, 0, sizeof(f));
 	}
 
 	void Identity()
 	{
-		ZeroMemory(a, sizeof(T) * 4 * 4);
+		Zero();
 		a[0][0] = 1;
 		a[1][1] = 1;
 		a[2][2] = 1;
@@ -439,13 +436,30 @@ struct Matrix4x4
 
 	void Transpose()
 	{
-		std::swap(f[1], f[4]);
-		std::swap(f[2], f[8]);
-		std::swap(f[3], f[12]);
+		T temp;
+		temp = f[1];
+		f[1] = f[4];
+		f[4] = temp;
 
-		std::swap(f[6], f[9]);
-		std::swap(f[7], f[13]);
-		std::swap(f[11], f[14]);
+		temp = f[2];
+		f[2] = f[8];
+		f[2] = temp;
+
+		temp = f[3];
+		f[3] = f[12];
+		f[12] = temp;
+
+		temp = f[6];
+		f[6] = f[9];
+		f[9] = temp;
+
+		temp = f[7];
+		f[7] = f[13];
+		f[13] = temp;
+
+		temp = f[11];
+		f[11] = f[14];
+		f[14] = temp;
 	}
 
 	inline T& operator()(int x, int y)
@@ -455,7 +469,7 @@ struct Matrix4x4
 
 	inline T& operator()(int x)
 	{
-		return ((float*)a)[x];
+		return ((T*)a)[x];
 	}
 
 	/*(function() {
@@ -478,7 +492,6 @@ struct Matrix4x4
 	Matrix4x4<T> operator*(const Matrix4x4<T>& other) const
 	{
 		const Matrix4x4<T>& o = other;
-
 		Matrix4x4<T> temp;
 		temp.a[0][0] = a[0][0] * o.a[0][0] + a[0][1] * o.a[1][0] + a[0][2] * o.a[2][0] + a[0][3] * o.a[3][0];
 		temp.a[0][1] = a[0][0] * o.a[0][1] + a[0][1] * o.a[1][1] + a[0][2] * o.a[2][1] + a[0][3] * o.a[3][1];
@@ -550,7 +563,7 @@ T Lerp(T x, T y, Y t)
 	return static_cast<T>(x + t * (y - x));
 }
 
-bool FloatEquals(float a, float b, float epsilon = 0.000001f)
+inline bool FloatEquals(float a, float b, float epsilon = 0.000001f)
 {
 	return fabs(a - b) <= epsilon;
 }

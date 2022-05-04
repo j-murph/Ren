@@ -319,7 +319,7 @@ void ToggleViewMode()
 {
 	RasterizerMode mode = pSceneRenderer->GetRasterizer()->GetRasterizerMode();
 	mode = (RasterizerMode)(((int)mode + 1) % (int)RasterizerMode::MODE_COUNT);
-	pSceneRenderer->GetRasterizer()->SetRasterizerMode((RasterizerMode)mode);
+	pSceneRenderer->GetRasterizer()->SetRasterizerMode(mode);
 }
 
 void HandleWindowResize(LPARAM lParam, WPARAM wParam, HWND hwnd)

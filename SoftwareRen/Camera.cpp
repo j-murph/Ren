@@ -155,9 +155,8 @@ void Camera::LookAt(const Vert3df& at)
 void Camera::UpdateProjectionMatrix()
 {
 	const float aspectRatio = viewportWidth / (float)viewportHeight;
-
-	float tanHalfFOV = std::tan(fov / 2.0f);
-	float zRange = nearPlane - farPlane;
+	const float tanHalfFOV = std::tan(fov / 2.0f);
+	const float zRange = nearPlane - farPlane;
 
 	projectionMatrix.Zero();
 	projectionMatrix(0, 0) = 1.0f / (tanHalfFOV * aspectRatio);

@@ -16,8 +16,8 @@ void Timer::Reset()
 float Timer::Elapsed()
 {
 	auto elapsed = clock.now() - lastUpdate;
-	auto elapsedMicrosenconds = std::chrono::duration_cast<std::chrono::microseconds>(clock.now() - lastUpdate);
-	return elapsedMicrosenconds.count() / 1000000.0f;
+	auto elapsedMicroseconds = std::chrono::duration_cast<std::chrono::microseconds>(clock.now() - lastUpdate);
+	return elapsedMicroseconds.count() / 1000000.0f;
 }
 
 float Timer::Lock()
