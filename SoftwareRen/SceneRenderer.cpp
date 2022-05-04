@@ -120,8 +120,8 @@ void SceneRenderer::DebugDrawLine(const Vert3df& p1, const Vert3df& p2, const SR
 	const Mat4x4f& projectionMatrix = camera->GetProjectionMatrix();
 	const Mat4x4f& vp = viewMatrix * projectionMatrix;
 
-	const float screenWidth = static_cast<float>(gfx.frameBuffer->GetWidth());
-	const float screenHeight = static_cast<float>(gfx.frameBuffer->GetHeight());
+	const float halfViewportWidth = static_cast<float>(gfx.frameBuffer->GetWidth()) / 2.0f;
+	const float halfViewportHeight = static_cast<float>(gfx.frameBuffer->GetHeight()) / 2.0f;
 
 	Vert4df p1c = vp * Vert4df(p1, 1), p2c = vp * Vert4df(p2, 1);
 
@@ -132,8 +132,8 @@ void SceneRenderer::DebugDrawLine(const Vert3df& p1, const Vert3df& p2, const SR
 
 	Vert2di rasterPoints[2] = 
 	{
-		{ static_cast<int>((p1c.x + 1.0f) / 2.0f * screenWidth), static_cast<int>((p1c.y + 1.0f) / 2.0f * screenHeight) },
-		{ static_cast<int>((p2c.x + 1.0f) / 2.0f * screenWidth), static_cast<int>((p2c.y + 1.0f) / 2.0f * screenHeight) }
+		{ static_cast<int>((p1c.x + 1.0f) * halfViewportWidth), static_cast<int>((p1c.y + 1.0f) * halfViewportHeight) },
+		{ static_cast<int>((p2c.x + 1.0f) * halfViewportWidth), static_cast<int>((p2c.y + 1.0f) * halfViewportHeight) }
 	};
 
 	rasterizer->DrawLine(rasterPoints[0], rasterPoints[1], gfx);
