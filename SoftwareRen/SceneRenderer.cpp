@@ -49,8 +49,8 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 
 	const Vert3df& cameraPos = camera->GetPosition();
 
-	const float viewportWidth = static_cast<float>(gfx.frameBuffer->GetWidth());
-	const float viewportHeight = static_cast<float>(gfx.frameBuffer->GetHeight());
+	const float halfViewportWidth = static_cast<float>(gfx.frameBuffer->GetWidth()) / 2.0f;
+	const float halfViewportHeight = static_cast<float>(gfx.frameBuffer->GetHeight()) / 2.0f;
 
 	Tri2di rasterTri;
 	for (Tri3df& tri : mesh.GetTriangles())
@@ -80,16 +80,16 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 
 		if (p1c.w <= 0.0f || p2c.w <= 0.0f || p3c.w <= 0.0f) continue;
 
-		rasterTri.p1.x = static_cast<int>((p1c.x + 1.0f) / 2.0f * viewportWidth);
-		rasterTri.p1.y = static_cast<int>((p1c.y + 1.0f) / 2.0f * viewportHeight);
+		rasterTri.p1.x = static_cast<int>((p1c.x + 1.0f) * halfViewportWidth);
+		rasterTri.p1.y = static_cast<int>((p1c.y + 1.0f) * halfViewportHeight);
 		//rasterTri.p1.z = p1c.z;
 
-		rasterTri.p2.x = static_cast<int>((p2c.x + 1.0f) / 2.0f * viewportWidth);
-		rasterTri.p2.y = static_cast<int>((p2c.y + 1.0f) / 2.0f * viewportHeight);
+		rasterTri.p2.x = static_cast<int>((p2c.x + 1.0f) * halfViewportWidth);
+		rasterTri.p2.y = static_cast<int>((p2c.y + 1.0f) * halfViewportHeight);
 		//rasterTri.p2.z = p2c.z;
 
-		rasterTri.p3.x = static_cast<int>((p3c.x + 1.0f) / 2.0f * viewportWidth);
-		rasterTri.p3.y = static_cast<int>((p3c.y + 1.0f) / 2.0f * viewportHeight);
+		rasterTri.p3.x = static_cast<int>((p3c.x + 1.0f) * halfViewportWidth);
+		rasterTri.p3.y = static_cast<int>((p3c.y + 1.0f) * halfViewportHeight);
 		//rasterTri.p3.z = p3c.z;
 
 		rasterizer->DrawTriangle(rasterTri, gfx);
