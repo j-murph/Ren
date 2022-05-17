@@ -26,38 +26,39 @@ bool Mesh::LoadFromFile(const std::string& filename)
 
 	std::vector<Vert3df> vertices;
 
-	Tokenizer<char> tkn(true);
+	Tokenizer<char> lineToken(true), faceTkn(true);
+
 	std::string line;
 	while (std::getline(file, line))
 	{
 		if (line.length() == 0 || line[0] == OBJ_COMMENT_CHAR) continue;
 
-		tkn.TokenizeString(line, OBJ_WHITESPACE_CHAR);
+		lineToken.TokenizeString(line, OBJ_WHITESPACE_CHAR);
 
 		try
 		{
-			const std::string& spec = tkn[0];
+			const std::string& spec = lineToken[0];
 
 			if (spec == OBJ_VERTEX_STR)
 			{
 				vertices.emplace_back(
-					tkn.ParseToken<float>(1),
-					tkn.ParseToken<float>(2),
-					tkn.ParseToken<float>(3));
+					lineToken.ParseToken<float>(1),
+					lineToken.ParseToken<float>(2),
+					lineToken.ParseToken<float>(3));
 			}
 			else if (spec == OBJ_FACE_STR)
 			{
-				Tokenizer<char> faceTkn(true);
+				faceTkn.Clear();
 
 				Tri3df triTemp;
 				for (int i = 0; i < 4; i++)
 				{
-					if (i >= tkn.GetTokens().size() - 1)
+					if (i >= lineToken.GetTokens().size() - 1)
 					{
 						break;
 					}
 
-					faceTkn.TokenizeString(tkn[i + 1], OBJ_FACE_SEPARATOR_CHAR);
+					faceTkn.TokenizeString(lineToken[i + 1], OBJ_FACE_SEPARATOR_CHAR);
 
 					const int vertIndex = faceTkn.ParseToken<int>(0);
 					const Vert3df& vertex = vertices.at(vertIndex - 1);
@@ -85,7 +86,7 @@ bool Mesh::LoadFromFile(const std::string& filename)
 				}
 			}
 
-			tkn.Clear();
+			lineToken.Clear();
 		}
 		catch (const std::exception&)
 		{

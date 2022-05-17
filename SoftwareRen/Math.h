@@ -129,7 +129,7 @@ struct Vertex4d
 
 	void DivideByW()
 	{
-		if (w != 0.0f)
+		if (w != static_cast<T>(0))
 		{
 			x /= w;
 			y /= w;
@@ -534,28 +534,28 @@ struct Matrix4x4
 	}
 };
 
-typedef Vertex2d<float> Vert2df;
-typedef Vertex2d<int> Vert2di;
+using Vert2df = Vertex2d<float>;
+using Vert2di = Vertex2d<int>;
 
-typedef Vertex3d<float> Vert3df;
-typedef Vertex3d<int> Vert3di;
+using Vert3df = Vertex3d<float>;
+using Vert3di = Vertex3d<int>;
 
-typedef Vertex4d<float> Vert4df;
-typedef Vertex4d<int> Vert4di;
+using Vert4df = Vertex4d<float>;
+using Vert4di = Vertex4d<int>;
 
-typedef Triangle2d<float> Tri2df;
-typedef Triangle2d<int>   Tri2di;
+using Tri2df = Triangle2d<float>;
+using Tri2di = Triangle2d<int>;
 
-typedef Triangle3d<float> Tri3df;
-typedef Triangle3d<int>   Tri3di;
+using Tri3df = Triangle3d<float>;
+using Tri3di = Triangle3d<int>;
 
-typedef Vector2d<float>	  Vec2df;
-typedef Vector2d<int>     Vec2di;
+using Vec2df = Vector2d<float>;
+using Vec2di = Vector2d<int>;
 
-typedef Vector3d<float>	  Vec3df;
-typedef Vector3d<int>     Vec3di;
+using Vec3df = Vector3d<float>;
+using Vec3di = Vector3d<int>;
 
-typedef Matrix4x4<float> Mat4x4f;
+using Mat4x4f = Matrix4x4<float>;
 
 template <class T, class Y = float>
 T Lerp(T x, T y, Y t)

@@ -24,7 +24,7 @@ public:
 
 	void Clear(const Color& color);
 
-	inline void PutPixel(const int& x, const int& y, const Color& color);
+	void PutPixel(const int& x, const int& y, const Color& color);
 
 	HDC BeginDraw(HDC hdc);
 	void EndDraw(HDC hdc);
@@ -35,7 +35,7 @@ public:
 	int GetHeight() const;
 };
 
-void FrameBuffer::PutPixel(const int& x, const int& y, const Color& color)
+__forceinline void FrameBuffer::PutPixel(const int& x, const int& y, const Color& color)
 {
 	if (x < 0 || y < 0) return;
 	if (x >= width || y >= height) return;

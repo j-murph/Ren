@@ -14,6 +14,27 @@ std::unique_ptr<SRGraphicsContext> pSrgc;
 std::unique_ptr<Rasterizer> pRasterizer(std::make_unique<Rasterizer>());
 std::unique_ptr<SceneRenderer> pSceneRenderer(std::make_unique<SceneRenderer>(pRasterizer.get()));
 
+template<class T>
+struct vvv
+{
+	vvv() {
+		std::cout << "v()" << std::endl;
+	}
+};
+
+template<class T>
+struct vvv<T[]>
+{
+	vvv() {
+		std::cout << "v[]()" << std::endl;
+	}
+};
+
+void t(int asd[5])
+{
+	std::cout << sizeof(asd) << std::endl;
+}
+
 int APIENTRY wWinMain(HINSTANCE hInstance,
 	HINSTANCE hPrevInstance,
 	LPWSTR lpCmdLine,
@@ -128,10 +149,19 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 	HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SOFTWAREREN));
 
 	Mesh objMesh, cubeMesh;
-	bool meshLoaded = objMesh.LoadFromFile("..\\Assets\\Models\\libertstatue.obj");
-	_ASSERT_EXPR(meshLoaded, TEXT("Failed to load mesh"));
-	cubeMesh.CreateCube(.5);
 
+	bool meshLoaded;
+	float loadTime = BenchmarkFunction([&]()
+	{ 
+		Timer loadTimer;
+		meshLoaded = objMesh.LoadFromFile("..\\Assets\\Models\\libertstatue.obj"); 
+	});
+
+	std::cout << "Loaded mesh in " << loadTime << " seconds" << std::endl;
+
+	_ASSERT_EXPR(meshLoaded, TEXT("Failed to load mesh"));
+
+	cubeMesh.CreateCube(.5);
 	objMesh.SetPosition({ 0, 0, 0 });
 	cubeMesh.SetPosition({ 0, 0, 0 });
 	pSceneRenderer->AddObjectToScene(&cubeMesh);
