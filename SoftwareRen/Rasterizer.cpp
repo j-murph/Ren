@@ -60,30 +60,44 @@ void Rasterizer::DrawLine(int p1x, int p1y, int p2x, int p2y, const SRGraphicsCo
 		std::swap(p1y, p2y);
 	}
 
-	int inc = p1y < p2y ? 1 : -1;
-
-	int dy = abs(p2y - p1y);
-	int dx = p2x - p1x;
-
+	const int yIncrement = p1y < p2y ? 1 : -1;
+	const int dy = abs(p2y - p1y);
+	const int dx = p2x - p1x;
 	int error = dx / 2;
-
 	int& y = p1y;
 
-	for (int x = p1x; x <= p2x; x++)
+	if (steep)
 	{
-		if (steep)
-			gfx.frameBuffer->PutPixel(y, x, col);
-		else
-			gfx.frameBuffer->PutPixel(x, y, col);
-
-		error -= dy;
-
-		if (error < 0)
+		for (int x = p1x; x <= p2x; x++)
 		{
-			y += inc;
-			error += dx;
+			gfx.frameBuffer->PutPixel(y, x, col);
+
+			error -= dy;
+
+			if (error < 0)
+			{
+				y += yIncrement;
+				error += dx;
+			}
 		}
 	}
+	else
+	{
+		for (int x = p1x; x <= p2x; x++)
+		{
+			gfx.frameBuffer->PutPixel(x, y, col);
+
+			error -= dy;
+
+			if (error < 0)
+			{
+				y += yIncrement;
+				error += dx;
+			}
+		}
+	}
+
+	
 }
 
 void Rasterizer::DrawPoint(const Vert2di& p1, const SRGraphicsContext& gfx)

@@ -3,7 +3,7 @@
 
 #define PI 3.14159265358f
 #define DEG_TO_RAD(deg) ((PI / 180.0f) * deg)
-#define TWO_THIRDSF (2.0 / 3.0f)
+#define TWO_THIRDSF (2.0f / 3.0f)
 
 template <class T>
 struct Vector3d;
@@ -443,7 +443,7 @@ struct Matrix4x4
 
 		temp = f[2];
 		f[2] = f[8];
-		f[2] = temp;
+		f[8] = temp;
 
 		temp = f[3];
 		f[3] = f[12];

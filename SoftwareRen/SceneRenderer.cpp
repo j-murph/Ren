@@ -79,9 +79,11 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 		p3c.DivideByW();
 
 		if (p1c.w <= 0.0f || p2c.w <= 0.0f || p3c.w <= 0.0f) continue;
-		/*if (p1c.x < -1.0f || p1c.x > 1.0f || p1c.y < -1.0f || p1c.y > 1.0f) continue;
+
+		// TODO: Clipping. Omit polygons that don't entirely fit in the viewport
+		if (p1c.x < -1.0f || p1c.x > 1.0f || p1c.y < -1.0f || p1c.y > 1.0f) continue;
 		if (p2c.x < -1.0f || p2c.x > 1.0f || p2c.y < -1.0f || p2c.y > 1.0f) continue;
-		if (p3c.x < -1.0f || p3c.x > 1.0f || p3c.y < -1.0f || p3c.y > 1.0f) continue;*/
+		if (p3c.x < -1.0f || p3c.x > 1.0f || p3c.y < -1.0f || p3c.y > 1.0f) continue;
 
 		rasterTri.p1.x = static_cast<int>((p1c.x + 1.0f) * halfViewportWidth);
 		rasterTri.p1.y = static_cast<int>((p1c.y + 1.0f) * halfViewportHeight);
