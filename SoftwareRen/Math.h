@@ -1,9 +1,9 @@
 #pragma once
 #include <math.h>
 
-#define PI 3.14159265358f
-#define DEG_TO_RAD(deg) ((PI / 180.0f) * deg)
-#define TWO_THIRDSF (2.0f / 3.0f)
+constexpr float REN_PI = 3.14159265358f;
+constexpr float TWO_THIRDSF = 2.0f / 3.0f;
+constexpr float DEFAULT_EPSILON = 0.000001f;
 
 template <class T>
 struct Vector3d;
@@ -64,9 +64,7 @@ struct Vertex3d
 	T y;
 	T z;
 
-	Vertex3d()
-	{
-	}
+	Vertex3d() = default;
 
 	Vertex3d(T x, T y, T z)
 	{
@@ -169,14 +167,14 @@ struct Triangle3d
 		p3.z = p3z;
 	}
 
-	Vector3d<T> GetNormal()
+	Vector3d<T> GetNormal() const
 	{
 		return Vector3d<T>({ p2.x - p1.x, p2.y - p1.y, p2.z - p1.z })
 			.Cross({ p3.x - p2.x, p3.y - p2.y, p3.z - p2.z })
 			.Normalize();
 	}
 
-	Vertex3d<T> GetCenter()
+	Vertex3d<T> GetCenter() const
 	{
 		Vertex3d<T> edgeCenter;
 		edgeCenter.x = Lerp(p1.x, p2.x, .5f);
@@ -269,9 +267,7 @@ struct Vector3d
 	T y;
 	T z;
 
-	Vector3d()
-	{
-	}
+	Vector3d() = default;
 
 	Vector3d(T x, T y, T z)
 	{
@@ -305,7 +301,7 @@ struct Vector3d
 		return *this;
 	}
 
-	Vector3d<T> Cross(const Vector3d<T>& other)
+	Vector3d<T> Cross(const Vector3d<T>& other) const
 	{
 		return Vector3d<T>(
 			(y * other.z) - (z * other.y),
@@ -374,11 +370,13 @@ struct Matrix4x4
 		a[3][3] = 1;
 	}
 
-	void SetTranslation(const Vertex3d<T>& position)
+	Matrix4x4<T>& SetTranslation(const Vertex3d<T>& position)
 	{
 		a[3][0] = position.x;
 		a[3][1] = position.y;
 		a[3][2] = position.z;
+
+		return *this;
 	}
 
 	Vertex3d<T> GetTranslation()
@@ -386,7 +384,7 @@ struct Matrix4x4
 		return Vertex3d<T>(a[3][0], a[3][1], a[3][2]);
 	}
 
-	void SetRotationX(T angle)
+	Matrix4x4<T>& SetRotationX(T angle)
 	{
 		T sin = std::sin(angle);
 		T cos = std::cos(angle);
@@ -395,9 +393,11 @@ struct Matrix4x4
 		a[1][2] = sin;
 		a[2][1] = -sin;
 		a[2][2] = cos;
+
+		return *this;
 	}
 
-	void SetRotationY(T angle)
+	Matrix4x4<T>& SetRotationY(T angle)
 	{
 		T sin = std::sin(angle);
 		T cos = std::cos(angle);
@@ -406,9 +406,11 @@ struct Matrix4x4
 		a[0][2] = -sin;
 		a[2][0] = sin;
 		a[2][2] = cos;
+
+		return *this;
 	}
 
-	void SetRotationZ(T angle)
+	Matrix4x4<T>& SetRotationZ(T angle)
 	{
 		T sin = std::sin(angle);
 		T cos = std::cos(angle);
@@ -417,24 +419,29 @@ struct Matrix4x4
 		a[0][1] = sin;
 		a[1][0] = -sin;
 		a[1][1] = cos;
+
+		return *this;
 	}
 
-	void SetScaleX(T scale)
+	Matrix4x4<T>& SetScaleX(T scale)
 	{
 		a[0][0] = scale;
+		return *this;
 	}
 
-	void SetScaleY(T scale)
+	Matrix4x4<T>& SetScaleY(T scale)
 	{
 		a[1][1] = scale;
+		return *this;
 	}
 
-	void SetScaleZ(T scale)
+	Matrix4x4<T>& SetScaleZ(T scale)
 	{
 		a[2][2] = scale;
+		return *this;
 	}
 
-	void Transpose()
+	Matrix4x4<T>& Transpose()
 	{
 		T temp;
 		temp = f[1];
@@ -460,6 +467,8 @@ struct Matrix4x4
 		temp = f[11];
 		f[11] = f[14];
 		f[14] = temp;
+
+		return *this;
 	}
 
 	inline T& operator()(int x, int y)
@@ -469,7 +478,7 @@ struct Matrix4x4
 
 	inline T& operator()(int x)
 	{
-		return ((T*)a)[x];
+		return f[x];
 	}
 
 	/*(function() {
@@ -563,7 +572,12 @@ T Lerp(T x, T y, Y t)
 	return static_cast<T>(x + t * (y - x));
 }
 
-inline bool FloatEquals(float a, float b, float epsilon = 0.000001f)
+inline bool FloatEquals(float a, float b, float epsilon = DEFAULT_EPSILON)
 {
 	return fabs(a - b) <= epsilon;
+}
+
+constexpr float Deg2Radf(float deg)
+{
+	return (REN_PI / 180.0f) * deg;
 }

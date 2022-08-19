@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Win32Helpers.h"
 #include "SoftwareRen.h"
 #include "Rasterizer.h"
 #include "SceneRenderer.h"
@@ -151,15 +152,14 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 	Mesh objMesh, cubeMesh;
 
 	bool meshLoaded;
-	float loadTime = BenchmarkFunction([&]()
+	const float loadTime = BenchmarkFunction([&]()
 	{ 
-		Timer loadTimer;
 		meshLoaded = objMesh.LoadFromFile("..\\Assets\\Models\\libertstatue.obj"); 
 	});
 
-	std::cout << "Loaded mesh in " << loadTime << " seconds" << std::endl;
-
 	_ASSERT_EXPR(meshLoaded, TEXT("Failed to load mesh"));
+
+	std::cout << "Loaded mesh in " << loadTime << " seconds" << std::endl;
 
 	cubeMesh.CreateCube(.5);
 	objMesh.SetPosition({ 0, 0, 0 });
@@ -195,7 +195,7 @@ int MessageLoop(HWND hwnd, HINSTANCE hInstance)
 		const bool needsRender = elapsed >= FRAME_TICK_RATE;
 		if (needsRender)
 		{
-			int currentFps = (int)(round(1.0f / elapsed));
+			const int currentFps = static_cast<int>(round(1.0f / elapsed));
 			fpsLimiter.Reset();
 			UpdateTitle(hwnd, currentFps);
 
@@ -300,7 +300,6 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	}
 
 	// Handle mouse movement
-	/* TODO
 	RECT rect;
 	GetClientRect(hwnd, &rect);
 
@@ -310,13 +309,14 @@ void UpdateCamera(HWND hwnd, Camera* camera)
 	bool mouseHasMoved = cursorPos.x != screenCenter.x || cursorPos.y != screenCenter.y;
 	if (mouseHasMoved)
 	{
-	Vec2df vecDirection(cursorPos.x - screenCenter.x, cursorPos.y - screenCenter.y);
+		Vec2df vecDirection(static_cast<float>(cursorPos.x - screenCenter.x), static_cast<float>(cursorPos.y - screenCenter.y));
 
-
-	// Re-center mouse position
-	CenterCursorPosition(hwnd);
+		//mainCamera.GetRotationX
+		
+		// Re-center mouse position
+		//CenterCursorPosition(hwnd);
 	}
-	*/
+	
 }
 
 void UpdateTitle(HWND hwnd, int currentFps)
@@ -334,21 +334,10 @@ void UpdateTitle(HWND hwnd, int currentFps)
 	}
 }
 
-void CenterCursorPosition(HWND hwnd)
-{
-	RECT rect;
-	GetClientRect(hwnd, &rect);
-
-	POINT point = { rect.right / 2, rect.bottom / 2 };
-
-	ClientToScreen(hwnd, &point);
-	SetCursorPos(point.x, point.y);
-}
-
 void ToggleViewMode()
 {
 	RasterizerMode mode = pSceneRenderer->GetRasterizer()->GetRasterizerMode();
-	mode = (RasterizerMode)(((int)mode + 1) % (int)RasterizerMode::MODE_COUNT);
+	mode = static_cast<RasterizerMode>(((int)mode + 1) % (int)RasterizerMode::MODE_COUNT);
 	pSceneRenderer->GetRasterizer()->SetRasterizerMode(mode);
 }
 

@@ -6,7 +6,7 @@ Camera::Camera() : viewportWidth(1), viewportHeight(1), position(0, 0, 1), lookA
 	viewMatrix.Identity();
 	SetNearPlane(0.1f);
 	SetFarPlane(10000.0f);
-	SetFOV(DEG_TO_RAD(70.0f));
+	SetFOV(Deg2Radf(70.0f));
 }
 
 const Mat4x4f& Camera::GetViewMatrix()
@@ -168,9 +168,9 @@ void Camera::UpdateProjectionMatrix()
 
 void Camera::Move(MoveDirection direction, float units)
 {
-	auto zAxis = (lookAt - position).Normalize();
-	auto xAxis = up.Cross(zAxis).Normalize();
-	auto yAxis = zAxis.Cross(xAxis);
+	const auto zAxis = (lookAt - position).Normalize();
+	const auto xAxis = up.Cross(zAxis).Normalize();
+	const auto yAxis = zAxis.Cross(xAxis);
 
 	switch (direction)
 	{

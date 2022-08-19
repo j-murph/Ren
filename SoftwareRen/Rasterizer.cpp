@@ -43,10 +43,10 @@ void Rasterizer::DrawLine(const Vert2di& p1, const Vert2di& p2, const SRGraphics
 
 void Rasterizer::DrawLine(int p1x, int p1y, int p2x, int p2y, const SRGraphicsContext& gfx)
 {
-	Color col(255, 0, 255);
+	const Color col(255, 0, 255);
 
 	// Bresenham's algorithm
-	bool steep = abs(p1y - p2y) > abs(p1x - p2x);
+	const bool steep = abs(p1y - p2y) > abs(p1x - p2x);
 
 	if (steep)
 	{
@@ -102,19 +102,19 @@ void Rasterizer::DrawLine(int p1x, int p1y, int p2x, int p2y, const SRGraphicsCo
 
 void Rasterizer::DrawPoint(const Vert2di& p1, const SRGraphicsContext& gfx)
 {
-	Color col(0, 255, 255);
+	const Color col(0, 255, 255);
 	gfx.frameBuffer->PutPixel(p1.x, p1.y, col);
 }
 
 void Rasterizer::DrawPoint(int x, int y, const SRGraphicsContext& gfx)
 {
-	Color col(255, 0, 255);
+	const Color col(255, 0, 255);
 	gfx.frameBuffer->PutPixel(x, y, col);
 }
 
 void Rasterizer::DrawPointTriangle(const Tri2di& triangle, const SRGraphicsContext& gfx)
 {
-	Color col(255, 0, 255);
+	const Color col(255, 0, 255);
 	gfx.frameBuffer->PutPixel(triangle.p1.x, triangle.p1.y, col);
 	gfx.frameBuffer->PutPixel(triangle.p2.x, triangle.p2.y, col);
 	gfx.frameBuffer->PutPixel(triangle.p3.x, triangle.p3.y, col);

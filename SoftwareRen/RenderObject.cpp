@@ -22,7 +22,7 @@ Mat4x4f RenderObject::GetWorldMatrix()
 	Mat4x4f tranMatrix;
 	tranMatrix.Identity();
 	tranMatrix.SetTranslation(position);
-	
+
 	return rotXMat * rotYMat * rotZMat * tranMatrix;
 }
 

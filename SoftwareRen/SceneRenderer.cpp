@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "SceneRenderer.h"
 
-SceneRenderer::SceneRenderer(Rasterizer* raster) : rasterizer(raster)
+SceneRenderer::SceneRenderer(Rasterizer* raster) : rasterizer(raster), camera(nullptr)
 {
 }
 
@@ -53,7 +53,7 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 	const float halfViewportHeight = static_cast<float>(gfx.frameBuffer->GetHeight()) / 2.0f;
 
 	Tri2di rasterTri;
-	for (Tri3df& tri : mesh.GetTriangles())
+	for (const Tri3df& tri : mesh.GetTriangles())
 	{
 		Vert4df p1c = worldMatrix * Vert4df(tri.p1, 1),
 				p2c = worldMatrix * Vert4df(tri.p2, 1),
@@ -106,15 +106,15 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 
 void SceneRenderer::DebugDrawNormal(const Tri3df& tri, const Mat4x4f& worldMatrix, const SRGraphicsContext& gfx)
 {
-	Vert4df p1m = worldMatrix * Vert4df(tri.p1, 1),
-			p2m = worldMatrix * Vert4df(tri.p2, 1),
-			p3m = worldMatrix * Vert4df(tri.p3, 1);
+	const Vert4df p1m = worldMatrix * Vert4df(tri.p1, 1),
+			      p2m = worldMatrix * Vert4df(tri.p2, 1),
+			      p3m = worldMatrix * Vert4df(tri.p3, 1);
 
-	Tri3df worldTri = { p1m.x, p1m.y, p1m.z, p2m.x, p2m.y, p2m.z, p3m.x, p3m.y, p3m.z };
+	const Tri3df worldTri = { p1m.x, p1m.y, p1m.z, p2m.x, p2m.y, p2m.z, p3m.x, p3m.y, p3m.z };
 
-	Vert3df vertCenterPoint = worldTri.GetCenter();
-	Vert3df normalOffset = worldTri.GetNormal() * .13f;
-	Vert3df vertEndPoint = vertCenterPoint + normalOffset;
+	const Vert3df vertCenterPoint = worldTri.GetCenter();
+	const Vert3df normalOffset = worldTri.GetNormal() * .13f;
+	const Vert3df vertEndPoint = vertCenterPoint + normalOffset;
 
 	DebugDrawLine(vertCenterPoint, vertEndPoint, gfx);
 }

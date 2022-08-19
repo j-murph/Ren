@@ -3,7 +3,6 @@
 #include <sstream>
 #include <fstream>
 
-const inline std::string emptyString = "";
 
 template <class delimiterT = char>
 class Tokenizer
@@ -12,6 +11,9 @@ private:
 	std::vector<std::string> tokens;
 
 	bool enableParserThrow;
+
+	const static inline std::string emptyString = "";
+
 
 public:
 	Tokenizer(bool throwOnParseError) : enableParserThrow(throwOnParseError)

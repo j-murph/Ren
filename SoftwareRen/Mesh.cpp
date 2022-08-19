@@ -51,7 +51,7 @@ bool Mesh::LoadFromFile(const std::string& filename)
 				faceTkn.Clear();
 
 				Tri3df triTemp;
-				for (int i = 0; i < 4; i++)
+				for (size_t i = 0; i < 4; i++)
 				{
 					if (i >= lineToken.GetTokens().size() - 1)
 					{
@@ -112,26 +112,26 @@ void Mesh::CreateCube(float size, const Vert3df& origin)
 	auto& triangles = GetTriangles();
 
 	// Back face
-	triangles.push_back(Tri3df(topBackLeft, bottomBackLeft, topBackRight));
-	triangles.push_back(Tri3df(topBackRight, bottomBackLeft, bottomBackRight));
+	triangles.emplace_back(topBackLeft, bottomBackLeft, topBackRight);
+	triangles.emplace_back(topBackRight, bottomBackLeft, bottomBackRight);
 
 	// Front face
-	triangles.push_back(Tri3df(topFrontLeft, topFrontRight, bottomFrontLeft));
-	triangles.push_back(Tri3df(topFrontRight, bottomFrontRight, bottomFrontLeft));
+	triangles.emplace_back(topFrontLeft, topFrontRight, bottomFrontLeft);
+	triangles.emplace_back(topFrontRight, bottomFrontRight, bottomFrontLeft);
 
 	// Left face
-	triangles.push_back(Tri3df(topBackLeft, topFrontLeft, bottomFrontLeft));
-	triangles.push_back(Tri3df(topBackLeft, bottomFrontLeft, bottomBackLeft));
+	triangles.emplace_back(topBackLeft, topFrontLeft, bottomFrontLeft);
+	triangles.emplace_back(topBackLeft, bottomFrontLeft, bottomBackLeft);
 
 	// Right face
-	triangles.push_back(Tri3df(bottomFrontRight, topFrontRight, topBackRight));
-	triangles.push_back(Tri3df(bottomFrontRight, topBackRight, bottomBackRight));
+	triangles.emplace_back(bottomFrontRight, topFrontRight, topBackRight);
+	triangles.emplace_back(bottomFrontRight, topBackRight, bottomBackRight);
 
 	// Top face
-	triangles.push_back(Tri3df(topFrontLeft, topBackLeft, topBackRight));
-	triangles.push_back(Tri3df(topFrontLeft, topBackRight, topFrontRight));
+	triangles.emplace_back(topFrontLeft, topBackLeft, topBackRight);
+	triangles.emplace_back(topFrontLeft, topBackRight, topFrontRight);
 
 	// Bottom face
-	triangles.push_back(Tri3df(bottomFrontLeft, bottomBackRight, bottomBackLeft));
-	triangles.push_back(Tri3df(bottomFrontLeft, bottomFrontRight, bottomBackRight));
+	triangles.emplace_back(bottomFrontLeft, bottomBackRight, bottomBackLeft);
+	triangles.emplace_back(bottomFrontLeft, bottomFrontRight, bottomBackRight);
 }

@@ -40,7 +40,7 @@ __forceinline void FrameBuffer::PutPixel(const int& x, const int& y, const Color
 	if (x < 0 || y < 0) return;
 	if (x >= width || y >= height) return;
 
-	DWORD value = (color.b) | (color.g << 8) | (color.r << 16);
+	const DWORD value = (color.b) | (color.g << 8) | (color.r << 16);
 	DWORD* dwPixels = static_cast<DWORD*>(pixels);
 	dwPixels[x + y * width] = value;
 }

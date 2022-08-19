@@ -18,8 +18,8 @@ struct RasterEdge
 	{
 		this->start = start;
 		direction = Vec2df((float)end.x, (float)end.y) - Vec2df((float)start.x, (float)start.y);
-		length = (int)direction.Length();
-		direction /= (float)length;
+		length = static_cast<int>(direction.Length());
+		direction /= static_cast<float>(length);
 		currentDistance = 0;
 	}
 
@@ -28,8 +28,8 @@ struct RasterEdge
 		if (currentDistance > length)
 			return false;
 
-		out.x = start.x + (int)(direction.x * currentDistance);
-		out.y = start.y + (int)(direction.y * currentDistance);
+		out.x = start.x + static_cast<int>(direction.x * currentDistance);
+		out.y = start.y + static_cast<int>(direction.y * currentDistance);
 
 		currentDistance++;
 

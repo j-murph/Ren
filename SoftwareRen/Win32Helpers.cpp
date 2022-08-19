@@ -14,3 +14,14 @@ POINT GetMouseCoordinates(HWND hwnd)
 
 	return p;
 }
+
+void CenterCursorPosition(HWND hwnd)
+{
+	RECT rect;
+	GetClientRect(hwnd, &rect);
+
+	POINT point = { rect.right / 2, rect.bottom / 2 };
+
+	ClientToScreen(hwnd, &point);
+	SetCursorPos(point.x, point.y);
+}

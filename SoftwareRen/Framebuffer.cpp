@@ -2,7 +2,7 @@
 #include "FrameBuffer.h"
 
 FrameBuffer::FrameBuffer() : targetWindow(nullptr), memDc(nullptr),
-	frontBufferBitmap(nullptr), width(0), height(0)
+	frontBufferBitmap(nullptr), width(0), height(0), pixels(nullptr)
 {
 }
 
@@ -24,8 +24,7 @@ bool FrameBuffer::SetSize(int width, int height)
 	
 	Free();
 
-	BITMAPINFO bmInfo;
-	ZeroMemory(&bmInfo, sizeof(bmInfo));
+	BITMAPINFO bmInfo{};
 	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmInfo.bmiHeader.biBitCount = 32;
 	bmInfo.bmiHeader.biWidth = width;
@@ -42,13 +41,13 @@ bool FrameBuffer::SetSize(int width, int height)
 
 void FrameBuffer::Clear(const Color& color)
 {
-	DWORD value = (color.b) | (color.g << 8) | (color.r << 16);
-	DWORD* curPixel = static_cast<DWORD*>(pixels);
-	for (int i = 0; i < width * height; i++)
-	{
-		*curPixel = value;
-		curPixel++;
-	}
+	static_assert(sizeof(DWORD) == sizeof(int));
+
+	DWORD dwordColor = (color.b) | (color.g << 8) | (color.r << 16);
+	int intValue{};
+
+	memcpy(&intValue, &dwordColor, sizeof(intValue));
+	memset(pixels, intValue, sizeof(DWORD) * width * height);
 }
 
 HDC FrameBuffer::BeginDraw(HDC hdc)
