@@ -16,11 +16,11 @@ private:
 
 
 public:
-	Tokenizer(bool throwOnParseError) : enableParserThrow(throwOnParseError)
+	Tokenizer(bool throwOnParseError = true) : enableParserThrow(throwOnParseError)
 	{
 	}
 
-	Tokenizer(const std::string& tokenizeMe, delimiterT delimiter) : Tokenizer(true)
+	Tokenizer(const std::string& tokenizeMe, delimiterT delimiter, bool throwOnParseError = true) : Tokenizer(throwOnParseError)
 	{
 		TokenizeString(tokenizeMe, delimiter);
 	}
