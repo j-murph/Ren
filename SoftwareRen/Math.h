@@ -17,9 +17,7 @@ struct Vertex2d
 	T x;
 	T y;
 
-	Vertex2d()
-	{
-	}
+	Vertex2d() = default;
 
 	Vertex2d(T x, T y)
 	{
@@ -35,9 +33,7 @@ struct Triangle2d
 	Vertex2d<T> p2;
 	Vertex2d<T> p3;
 
-	Triangle2d()
-	{
-	}
+	Triangle2d() = default;
 
 	Triangle2d(const Vertex2d<T>& p1, const Vertex2d<T>& p2, const Vertex2d<T>& p3)
 	{
@@ -109,9 +105,7 @@ struct Vertex4d
 	T z;
 	T w;
 
-	Vertex4d()
-	{
-	}
+	Vertex4d() = default;
 
 	Vertex4d(T x, T y, T z, T w)
 	{
@@ -127,12 +121,15 @@ struct Vertex4d
 
 	void DivideByW()
 	{
-		if (w != static_cast<T>(0))
+		T inverseW = w;
+		if (inverseW != static_cast<T>(0))
 		{
-			x /= w;
-			y /= w;
-			z /= w;
+			inverseW = 1 / w;
 		}
+
+		x *= inverseW;
+		y *= inverseW;
+		z *= inverseW;
 	}
 };
 
@@ -143,9 +140,7 @@ struct Triangle3d
 	Vertex3d<T> p2;
 	Vertex3d<T> p3;
 
-	Triangle3d()
-	{
-	}
+	Triangle3d() = default;
 
 	Triangle3d(const Vertex3d<T>& p1, const Vertex3d<T>& p2, const Vertex3d<T>& p3)
 	{
@@ -198,9 +193,7 @@ struct Vector2d
 	T x;
 	T y;
 
-	Vector2d()
-	{
-	}
+	Vector2d() = default;
 
 	Vector2d(T x, T y)
 	{
@@ -221,12 +214,14 @@ struct Vector2d
 
 	Vector2d<T>& Normalize()
 	{
-		T length = Length();
-		if (length != 0)
+		T inverseLength = Length();
+		if (inverseLength != static_cast<T>(0))
 		{
-			x /= length;
-			y /= length;
+			inverseLength = 1 / inverseLength;
 		}
+
+		x *= inverseLength;
+		y *= inverseLength;
 
 		return *this;
 	}
@@ -290,23 +285,33 @@ struct Vector3d
 
 	Vector3d<T>& Normalize()
 	{
-		T length = Length();
-		if (length != 0)
+		T inverseLength = Length();
+		if (inverseLength != static_cast<T>(0))
 		{
-			x /= length;
-			y /= length;
-			z /= length;
+			inverseLength = 1 / inverseLength;
 		}
+
+		x *= inverseLength;
+		y *= inverseLength;
+		z *= inverseLength;
 
 		return *this;
 	}
 
 	Vector3d<T> Cross(const Vector3d<T>& other) const
 	{
+#ifdef REN_SIMD
+		// TODO
 		return Vector3d<T>(
 			(y * other.z) - (z * other.y),
 			(z * other.x) - (x * other.z),
 			(x * other.y) - (y * other.x));
+#else 
+		return Vector3d<T>(
+			(y * other.z) - (z * other.y),
+			(z * other.x) - (x * other.z),
+			(x * other.y) - (y * other.x));
+#endif
 	}
 
 	T Dot(const Vector3d<T>& other)
@@ -565,6 +570,7 @@ using Vec3df = Vector3d<float>;
 using Vec3di = Vector3d<int>;
 
 using Mat4x4f = Matrix4x4<float>;
+using Mat4x4i = Matrix4x4<int>;
 
 template <class T, class Y = float>
 T Lerp(T x, T y, Y t)

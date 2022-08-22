@@ -246,7 +246,7 @@ void HandlePaint(HWND hwnd)
 		cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
 	SetTextColor(memDc, 0x00FFFFFF);
-	SetBkColor(memDc, TRANSPARENT);
+	SetBkMode(memDc, TRANSPARENT);
 	DrawText(memDc, szCameraPos, characterCount, &clientRect, 0);
 
 	pSrgc->frameBuffer->EndDraw(hdc);

@@ -96,8 +96,6 @@ void Rasterizer::DrawLine(int p1x, int p1y, int p2x, int p2y, const SRGraphicsCo
 			}
 		}
 	}
-
-	
 }
 
 void Rasterizer::DrawPoint(const Vert2di& p1, const SRGraphicsContext& gfx)
