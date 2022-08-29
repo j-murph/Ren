@@ -125,11 +125,11 @@ struct Vertex4d
 		if (inverseW != static_cast<T>(0))
 		{
 			inverseW = 1 / w;
-		}
 
-		x *= inverseW;
-		y *= inverseW;
-		z *= inverseW;
+			x *= inverseW;
+			y *= inverseW;
+			z *= inverseW;
+		}
 	}
 };
 
@@ -218,10 +218,10 @@ struct Vector2d
 		if (inverseLength != static_cast<T>(0))
 		{
 			inverseLength = 1 / inverseLength;
-		}
 
-		x *= inverseLength;
-		y *= inverseLength;
+			x *= inverseLength;
+			y *= inverseLength;
+		}
 
 		return *this;
 	}
@@ -289,11 +289,11 @@ struct Vector3d
 		if (inverseLength != static_cast<T>(0))
 		{
 			inverseLength = 1 / inverseLength;
-		}
 
-		x *= inverseLength;
-		y *= inverseLength;
-		z *= inverseLength;
+			x *= inverseLength;
+			y *= inverseLength;
+			z *= inverseLength;
+		}
 
 		return *this;
 	}
