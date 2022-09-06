@@ -25,3 +25,9 @@ void CenterCursorPosition(HWND hwnd)
 	ClientToScreen(hwnd, &point);
 	SetCursorPos(point.x, point.y);
 }
+
+bool WindowsClassExists(LPCTSTR className)
+{
+	WNDCLASSEX unused{};
+	return GetClassInfoEx(instanceHandle, className, &unused) == TRUE;
+}

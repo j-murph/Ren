@@ -63,7 +63,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
-	WNDCLASSEXW wcex;
+	WNDCLASSEXW wcex{};
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_HREDRAW | CS_VREDRAW;
 	wcex.lpfnWndProc = WndProc;
@@ -74,14 +74,14 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 	wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wcex.lpszMenuName = MAKEINTRESOURCEW(IDC_SOFTWAREREN);
-	wcex.lpszClassName = szWindowClass;
+	wcex.lpszClassName = TEXT("SoftwareRen");
 	wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
-	return RegisterClassExW(&wcex);
+	return RegisterClassEx(&wcex);
 }
 
 HWND InitWindow(HINSTANCE hInstance, int nCmdShow)
 {
-	HWND hwnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
+	HWND hwnd = CreateWindow(TEXT("SoftwareRen"), nullptr, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
 	if (!hwnd)
@@ -89,7 +89,7 @@ HWND InitWindow(HINSTANCE hInstance, int nCmdShow)
 		return nullptr;
 	}
 
-	ShowWindow(hwnd, nCmdShow);
+	ShowWindow(hwnd, SW_SHOW);
 	UpdateWindow(hwnd);
 
 	return hwnd;
@@ -329,7 +329,7 @@ void UpdateTitle(HWND hwnd, int currentFps)
 		lastUpdate.Reset();
 
 		WCHAR title[256] = { 0 };
-		swprintf_s(title, 256, TEXT("%s - %i FPS"), szTitle, currentFps);
+		swprintf_s(title, 256, TEXT("%s - %i FPS"), TEXT("Ren - "), currentFps);
 		SetWindowText(hwnd, title);
 	}
 }

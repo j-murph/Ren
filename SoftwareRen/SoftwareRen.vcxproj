@@ -177,6 +177,8 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Tokenizer.h" />
     <ClInclude Include="Win32Helpers.h" />
+    <ClInclude Include="Window.h" />
+    <ClInclude Include="WindowsClassRegistrar.h" />
     <ClInclude Include="ZBuffer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -195,6 +197,8 @@
     </ClCompile>
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Win32Helpers.cpp" />
+    <ClCompile Include="Window.cpp" />
+    <ClCompile Include="WindowsClassRegistrar.cpp" />
     <ClCompile Include="ZBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
