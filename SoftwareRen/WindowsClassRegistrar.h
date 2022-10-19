@@ -6,13 +6,9 @@ class WindowsClassRegistrar
 {
 	ATOM classAtom = 0;
 
-	HINSTANCE appInstance = 0;
-
 	LPCTSTR className = nullptr;
 
 	WndProcType wndProc = nullptr;
-
-	int referenceCount = 0;
 
 protected:
 	WndProcType GetWndProc() { return wndProc; }
@@ -25,7 +21,7 @@ public:
 
 	LPCTSTR GetClassName() const { return className; }
 
-	ATOM GetClassAtom(HINSTANCE appInstance, bool addReference = true);
+	ATOM GetClassAtom();
 };
 
 class DefaultWindowsClassRegistrar : public WindowsClassRegistrar
@@ -35,6 +31,6 @@ protected:
 
 public:
 	DefaultWindowsClassRegistrar(WndProcType wndProc)
-		: WindowsClassRegistrar(TEXT("RenDefaultWin_{0195302}"), wndProc)
+		: WindowsClassRegistrar(TEXT("RenDefaultWin_0195302"), wndProc)
 	{}
 };

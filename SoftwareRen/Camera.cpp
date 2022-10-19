@@ -6,7 +6,7 @@ Camera::Camera() : viewportWidth(1), viewportHeight(1), position(0, 0, 1), lookA
 	viewMatrix.Identity();
 	SetNearPlane(0.1f);
 	SetFarPlane(10000.0f);
-	SetFOV(Deg2Radf(70.0f));
+	SetFOV(Deg2Rad(70.0f));
 }
 
 const Mat4x4f& Camera::GetViewMatrix()
@@ -162,7 +162,7 @@ void Camera::UpdateProjectionMatrix()
 	projectionMatrix(0, 0) = 1.0f / (tanHalfFOV * aspectRatio);
 	projectionMatrix(1, 1) = 1.0f / tanHalfFOV;
 	projectionMatrix(2, 2) = (-nearPlane - farPlane) / zRange;
-	projectionMatrix(2, 3) = 1; // Left handed, invert for right handed
+	projectionMatrix(2, 3) = 1;
 	projectionMatrix(3, 2) = (2 * nearPlane * farPlane) / zRange;
 }
 

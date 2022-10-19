@@ -2,13 +2,12 @@
 #include <float.h>
 #include "ZBuffer.h"
 
-ZBuffer::ZBuffer() : buffer(nullptr), width(0), height(0)
+ZBuffer::ZBuffer() : width(0), height(0)
 {
 }
 
 ZBuffer::~ZBuffer()
 {
-	SAFE_FREE_ARRAY(buffer);
 }
 
 void ZBuffer::Init(int width, int height)
@@ -18,12 +17,10 @@ void ZBuffer::Init(int width, int height)
 
 void ZBuffer::SetSize(int width, int height)
 {
-	SAFE_FREE_ARRAY(buffer);
-
 	this->width = width;
 	this->height = height;
 
-	buffer = new float[width * height];
+	buffer.reset(new float[width * height]);
 }
 
 void ZBuffer::Clear(float value)

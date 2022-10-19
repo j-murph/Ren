@@ -19,10 +19,10 @@ bool FrameBuffer::Init(HWND targetWindow, int width, int height)
 
 bool FrameBuffer::SetSize(int width, int height)
 {
+	Free();
+
 	this->width = width;
 	this->height = height;
-	
-	Free();
 
 	BITMAPINFO bmInfo{};
 	bmInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
@@ -41,13 +41,17 @@ bool FrameBuffer::SetSize(int width, int height)
 
 void FrameBuffer::Clear(const Color& color)
 {
-	static_assert(sizeof(DWORD) == sizeof(int));
-
 	DWORD dwordColor = (color.b) | (color.g << 8) | (color.r << 16);
-	int intValue{};
+	DWORD* start = static_cast<DWORD*>(pixels);
 
-	memcpy(&intValue, &dwordColor, sizeof(intValue));
-	memset(pixels, intValue, sizeof(DWORD) * width * height);
+	// TODO: Optimize this
+	for (int x = 0; x < width; x++)
+	{
+		for (int y = 0; y < height; y++)
+		{
+			*start++ = dwordColor;
+		}
+	}
 }
 
 HDC FrameBuffer::BeginDraw(HDC hdc)

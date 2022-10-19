@@ -2,9 +2,9 @@
 #include "Rasterizer.h"
 #include "RasterEdge.h"
 
-Rasterizer::Rasterizer()
+Rasterizer::Rasterizer(RasterizerMode mode)
 {
-	SetRasterizerMode(RasterizerMode::FILLED);
+	SetRasterizerMode(mode);
 }
 
 void Rasterizer::SetRasterizerMode(RasterizerMode mode)

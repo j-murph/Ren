@@ -87,6 +87,15 @@
     <ClInclude Include="WindowsClassRegistrar.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ITickable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IRefCounted.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -126,6 +135,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WindowsClassRegistrar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenWindow.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

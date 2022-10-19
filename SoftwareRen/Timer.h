@@ -1,13 +1,11 @@
 #pragma once
 #include <chrono>
 
-using namespace std::chrono;
-
 class Timer
 {
 private:
-	steady_clock clock;
-	time_point<std::chrono::steady_clock> lastUpdate;
+	std::chrono::steady_clock clock;
+	std::chrono::time_point<std::chrono::steady_clock> lastUpdate;
 	float lockedTime;
 
 public:

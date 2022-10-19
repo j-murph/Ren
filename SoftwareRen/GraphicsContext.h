@@ -7,7 +7,6 @@ struct SRGraphicsContext
 {
 	std::unique_ptr<FrameBuffer> frameBuffer;
 	std::unique_ptr<ZBuffer> zBuffer;
-	HWND targetWindow;
 
 	struct
 	{
@@ -15,13 +14,8 @@ struct SRGraphicsContext
 		std::atomic<bool> drawNormals = false;
 	} options;
 
-	SRGraphicsContext(HWND targetWindow) : frameBuffer(std::make_unique<FrameBuffer>()),
-		zBuffer(std::make_unique<ZBuffer>()), targetWindow(targetWindow)
+	SRGraphicsContext() : frameBuffer(std::make_unique<FrameBuffer>()),
+		zBuffer(std::make_unique<ZBuffer>())
 	{
-	}
-
-	HWND GetTargetWindow()
-	{
-		return targetWindow;
 	}
 };

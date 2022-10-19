@@ -583,7 +583,7 @@ inline bool FloatEquals(float a, float b, float epsilon = DEFAULT_EPSILON)
 	return fabs(a - b) <= epsilon;
 }
 
-constexpr float Deg2Radf(float deg)
+constexpr float Deg2Rad(float deg)
 {
 	return (REN_PI / 180.0f) * deg;
 }

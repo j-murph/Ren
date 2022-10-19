@@ -1,41 +1,40 @@
 #pragma once
 #include "WindowsClassRegistrar.h"
+#include "Rasterizer.h"
+#include "SceneRenderer.h"
+#include "IRefCounted.h"
 
-
-class Window
+class Window : public IRefCounted
 {
 private:
+	bool destroyed = false;
+
+	int refCount = 1;
+
 	HWND hwnd = nullptr;
 
-	static LRESULT CALLBACK TopLevelWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	static inline DefaultWindowsClassRegistrar defaultRegistrar{ Window::TopLevelWndProc };
-
-	static inline ATOM defaultClassAtom = 0;
-
-	static inline HINSTANCE instanceHandle = 0;
+	static inline DefaultWindowsClassRegistrar defaultRegistrar{ Window::DefaultWndProc };
 
 protected:
-	virtual ATOM GetWindowClassAtom();
-
-	static bool ClassExists(LPCTSTR className);
-
-	static WndProcType GetTopLevelWndProc() { return Window::TopLevelWndProc; }
-
-public:
 	Window() = default;
 
-	static void SetInstanceHandle(HINSTANCE hInstance) { instanceHandle = hInstance; }
-	static HINSTANCE getInstanceHandle() { return instanceHandle; }
+	virtual ATOM GetWindowClassAtom();
+
+	virtual LRESULT HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) = 0;
+
+public:
+	virtual ~Window();
 
 	virtual bool Create(int width, int height, LPCTSTR title);
 
-	HWND GetWindowHandle() const { return hwnd; };
+	virtual void Destroy();
 
-	virtual ~Window() {}
-};
+	virtual int AddRef() final;
+	virtual void Release() final;
 
-class RenWindow : public Window
-{
+	HWND GetWindowHandle() const;
 
+	bool IsDestroyed() const;
 };

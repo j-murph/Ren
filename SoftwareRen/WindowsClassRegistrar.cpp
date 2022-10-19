@@ -10,25 +10,18 @@ WindowsClassRegistrar::WindowsClassRegistrar(const LPCTSTR className, WndProcTyp
 
 WindowsClassRegistrar::~WindowsClassRegistrar()
 {
-	if (--referenceCount == 0)
+	if (classAtom != 0)
 	{
-		UnregisterClass(className, appInstance);
 		classAtom = 0;
-		appInstance = 0;
+		UnregisterClass(className, GetAppInstance());
 	}
 }
 
-ATOM WindowsClassRegistrar::GetClassAtom(HINSTANCE appInstance, bool addReference /* = true */)
+ATOM WindowsClassRegistrar::GetClassAtom()
 {
 	if (classAtom == 0)
 	{
-		this->appInstance = appInstance;
-		classAtom = RegisterWindowsClass(className, appInstance);
-		referenceCount++;
-	}
-	else if (addReference)
-	{
-		referenceCount++;
+		classAtom = RegisterWindowsClass(className, GetAppInstance());
 	}
 
 	_ASSERT(classAtom != 0);

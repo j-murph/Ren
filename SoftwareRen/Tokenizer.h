@@ -8,12 +8,11 @@ template <class delimiterT = char>
 class Tokenizer
 {
 private:
+	const static inline std::string emptyString = "";
+
 	std::vector<std::string> tokens;
 
 	bool enableParserThrow;
-
-	const static inline std::string emptyString = "";
-
 
 public:
 	Tokenizer(bool throwOnParseError = true) : enableParserThrow(throwOnParseError)
@@ -40,10 +39,10 @@ public:
 	template <class T>
 	T ParseToken(size_t tokenIndex)
 	{
-		if (tokenIndex < 0 || tokenIndex >= tokens.size())
+		if (tokenIndex >= tokens.size())
 		{
 			ThrowParserExceptionIfEnabled<std::out_of_range>("Index out of range.");
-			return T();
+			return T{};
 		}
 
 		T temp;
@@ -78,7 +77,7 @@ public:
 
 	const std::string& operator[](size_t tokenIndex)
 	{
-		if (tokenIndex < 0 || tokenIndex >= tokens.size())
+		if (tokenIndex >= tokens.size())
 		{
 			ThrowParserExceptionIfEnabled<std::out_of_range>("Index out of range.");
 			return emptyString;

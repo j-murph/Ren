@@ -3,10 +3,10 @@
 
 enum class RasterizerMode
 {
-	POINT = 0,
-	WIRE_FRAME = 1,
-	FILLED = 2,
-	MODE_COUNT = 3 // Must be last
+	POINT,
+	WIRE_FRAME,
+	FILLED ,
+	MODE_COUNT // Must be last
 };
 
 class Rasterizer
@@ -23,7 +23,7 @@ private:
 	void (Rasterizer::*CurrentModeDrawTriangle)(const Tri2di&, const SRGraphicsContext&);
 
 public:
-	Rasterizer();
+	Rasterizer(RasterizerMode mode = RasterizerMode::FILLED);
 
 	void SetRasterizerMode(RasterizerMode mode);
 	RasterizerMode GetRasterizerMode();

@@ -8,7 +8,6 @@ private:
 	std::vector<Tri3df> triangles;
 
 public:
-
 	RenderObjectType GetType() override;
 
 	std::vector<Tri3df>& GetTriangles();

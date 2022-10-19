@@ -1,46 +1,89 @@
 #include "stdafx.h"
 #include "Window.h"
 #include "resource.h"
+#include "Win32Helpers.h"
+
+Window::~Window()
+{
+}
 
 bool Window::Create(int width, int height, LPCTSTR title)
 {
-	auto windowClassAtom = GetWindowClassAtom();
+	ATOM windowClassAtom = GetWindowClassAtom();
 	if (!windowClassAtom)
 		return false;
 
-	hwnd = CreateWindow(MAKEINTATOM(windowClassAtom), title, WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, instanceHandle, this);
+	HWND result = CreateWindow(MAKEINTATOM(windowClassAtom), title, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, CW_USEDEFAULT, width, height, nullptr, nullptr, GetAppInstance(), this);
 
-	if (!hwnd)
+	if (!result)
 	{
 		return false;
 	}
-
-	ShowWindow(hwnd, SW_SHOW);
-	UpdateWindow(hwnd);
 
 	return true;
 }
 
+void Window::Destroy()
+{
+	DestroyWindow(GetWindowHandle());
+}
+
 ATOM Window::GetWindowClassAtom()
 {
-	return defaultRegistrar.GetClassAtom(getInstanceHandle());
+	return defaultRegistrar.GetClassAtom();
 }
 
-bool Window::ClassExists(LPCTSTR className)
+LRESULT CALLBACK Window::DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	WNDCLASSEX unused{};
-	return GetClassInfoEx(instanceHandle, className, &unused) == TRUE;
-}
+	Window* targetWindow = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
-LRESULT CALLBACK Window::TopLevelWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
+	if (message == WM_NCDESTROY && targetWindow != nullptr)
+	{
+		LRESULT retValue = targetWindow->HandleMessage(message, wParam, lParam);
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, 0);
+
+		targetWindow->destroyed = true;
+		targetWindow->Release();
+
+		return retValue;
+	}
+
+	if (targetWindow)
+	{
+		return targetWindow->HandleMessage(message, wParam, lParam);
+	}
+	
 	if (message == WM_NCCREATE)
 	{
-	}
-	else
-	{
+		LPCREATESTRUCT cs = reinterpret_cast<LPCREATESTRUCT>(lParam);
+		targetWindow = static_cast<Window*>(cs->lpCreateParams);
+		targetWindow->hwnd = hwnd;
+		SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(cs->lpCreateParams));
 	}
 
 	return DefWindowProc(hwnd, message, wParam, lParam);
+}
+
+int Window::AddRef()
+{
+	return ++refCount;
+}
+
+void Window::Release()
+{
+	if (--refCount == 0)
+	{
+		delete this;
+	}
+}
+
+HWND Window::GetWindowHandle() const
+{
+	return hwnd;
+}
+
+bool Window::IsDestroyed() const
+{
+	return destroyed;
 }

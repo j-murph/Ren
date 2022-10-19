@@ -3,7 +3,7 @@
 class ZBuffer
 {
 private:
-	float* buffer;
+	std::unique_ptr<float[]> buffer = std::make_unique<float[]>(width * height);
 
 	int width;
 	int height;
@@ -18,7 +18,7 @@ public:
 
 	void Clear(float value = 0.0f);
 
-	inline void SetDepth(int x, int y, float depth);
+	__forceinline void SetDepth(int x, int y, float depth);
 };
 
 void ZBuffer::SetDepth(int x, int y, float depth)
