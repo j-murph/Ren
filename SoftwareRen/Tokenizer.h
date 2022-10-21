@@ -32,7 +32,7 @@ public:
 		std::string token;
 		while (std::getline(ss, token, delimiter))
 		{
-			tokens.push_back(std::move(token));
+			tokens.emplace_back(std::move(token));
 		}
 	}
 

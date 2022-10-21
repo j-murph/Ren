@@ -2,4 +2,4 @@
 #include "resource.h"
 #include "RenWindow.h"
 
-int	MessageLoop(RenWindow* mainWindow);
+int	MessageLoop(RenWindow* window);

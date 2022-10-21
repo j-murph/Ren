@@ -11,7 +11,7 @@ private:
 
 	Camera mainCamera;
 
-	RenWindow();
+	bool handleMouseInput;
 
 	void Render();
 	void HandlePaint();
@@ -26,7 +26,7 @@ protected:
 	virtual LRESULT HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
-	static RenWindow* CreateInstance() { return new RenWindow; }
+	RenWindow();
 
 	virtual bool Create(int width, int height, LPCTSTR title) override;
 

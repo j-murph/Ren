@@ -42,15 +42,14 @@ bool FrameBuffer::SetSize(int width, int height)
 void FrameBuffer::Clear(const Color& color)
 {
 	DWORD dwordColor = (color.b) | (color.g << 8) | (color.r << 16);
-	DWORD* start = static_cast<DWORD*>(pixels);
+	DWORD* currentPixel = static_cast<DWORD*>(pixels);
 
 	// TODO: Optimize this
-	for (int x = 0; x < width; x++)
+	int iterationCount = width * height;
+	while (iterationCount != 0)
 	{
-		for (int y = 0; y < height; y++)
-		{
-			*start++ = dwordColor;
-		}
+		*currentPixel++ = dwordColor;
+		iterationCount--;
 	}
 }
 

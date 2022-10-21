@@ -1,5 +1,6 @@
 #pragma once
 
+POINT GetWindowClientCenter(HWND hwnd);
 POINT GetMouseCoordinates(HWND hwnd);
 
 void CenterCursorPosition(HWND hwnd);

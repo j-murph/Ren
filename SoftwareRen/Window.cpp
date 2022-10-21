@@ -38,19 +38,19 @@ LRESULT CALLBACK Window::DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, 
 {
 	Window* targetWindow = reinterpret_cast<Window*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
-	if (message == WM_NCDESTROY && targetWindow != nullptr)
-	{
-		LRESULT retValue = targetWindow->HandleMessage(message, wParam, lParam);
-		SetWindowLongPtr(hwnd, GWLP_USERDATA, 0);
-
-		targetWindow->destroyed = true;
-		targetWindow->Release();
-
-		return retValue;
-	}
-
 	if (targetWindow)
 	{
+		if (message == WM_NCDESTROY)
+		{
+			LRESULT retValue = targetWindow->HandleMessage(message, wParam, lParam);
+			SetWindowLongPtr(hwnd, GWLP_USERDATA, 0);
+
+			targetWindow->destroyed = true;
+			targetWindow->Release();
+
+			return retValue;
+		}
+
 		return targetWindow->HandleMessage(message, wParam, lParam);
 	}
 	

@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "RenWindow.h"
+#include "Win32Helpers.h"
 
 RenWindow::RenWindow() :
 	pRasterizer(std::make_unique<Rasterizer>()),
-	pSceneRenderer(std::make_unique<SceneRenderer>(pRasterizer.get()))
+	pSceneRenderer(std::make_unique<SceneRenderer>(pRasterizer.get())),
+	handleMouseInput(false)
 {
 }
 
@@ -218,22 +220,25 @@ void RenWindow::UpdateCamera()
 	}
 
 	// TODO: Handle mouse movement
-	/*RECT rect;
-	GetClientRect(GetWindowHandle(), &rect);
-
-	POINT screenCenter = { rect.right / 2, rect.bottom / 2 };
-	POINT cursorPos = GetMouseCoordinates(hwnd);
-
-	bool mouseHasMoved = cursorPos.x != screenCenter.x || cursorPos.y != screenCenter.y;
-	if (mouseHasMoved)
+	if (handleMouseInput)
 	{
-		Vec2df vecDirection{ static_cast<float>(cursorPos.x - screenCenter.x), static_cast<float>(cursorPos.y - screenCenter.y) };
+		HWND hwnd = GetWindowHandle();
+		RECT rect;
+		GetClientRect(hwnd, &rect);
 
-		mainCamera.GetRotationX
+		POINT screenCenter = { rect.right / 2, rect.bottom / 2 };
+		POINT cursorPos = GetMouseCoordinates(GetWindowHandle());
 
-		 Re-center mouse position
-		CenterCursorPosition(hwnd);
-	}*/
+		bool mouseHasMoved = cursorPos.x != screenCenter.x || cursorPos.y != screenCenter.y;
+		if (mouseHasMoved)
+		{
+			Vec2df vecDirection{ static_cast<float>(cursorPos.x - screenCenter.x), static_cast<float>(cursorPos.y - screenCenter.y) };
+			Mat4x4f rotX{};
+
+			//mainCamera.GetRotationX
+			CenterCursorPosition(hwnd);
+		}
+	}
 }
 
 void RenWindow::UpdateTitle(int currentFps)
@@ -273,6 +278,14 @@ void RenWindow::HandleKeyDown(WPARAM wParam)
 		break;
 	case 'N':
 		pSrgc->options.drawNormals = !pSrgc->options.drawNormals;
+		break;
+	case 'M':
+		handleMouseInput = !handleMouseInput;
+		ShowCursor(!handleMouseInput);
+		if (handleMouseInput)
+		{
+			CenterCursorPosition(GetWindowHandle());
+		}
 		break;
 	}
 }

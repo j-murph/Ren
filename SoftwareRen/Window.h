@@ -19,14 +19,13 @@ private:
 
 protected:
 	Window() = default;
+	virtual ~Window();
 
 	virtual ATOM GetWindowClassAtom();
 
 	virtual LRESULT HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) = 0;
 
 public:
-	virtual ~Window();
-
 	virtual bool Create(int width, int height, LPCTSTR title);
 
 	virtual void Destroy();
@@ -38,3 +37,16 @@ public:
 
 	bool IsDestroyed() const;
 };
+
+template <class T, typename ...A>
+T* CreateWin(A&& ...args)
+{
+	T* window = new T();
+	if (!window->Create(std::forward<A>(args)...))
+	{
+		// No need to Release() window
+		return nullptr;
+	}
+
+	return window;
+}

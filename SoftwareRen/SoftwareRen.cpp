@@ -16,20 +16,19 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	std::shared_ptr<int> p = std::make_shared<int>(5);
 	auto gg = p;
 
-	RenWindow* mainWindow = RenWindow::CreateInstance();
-	bool windowCreated = mainWindow->Create(1024, 768, TEXT("Ren"));
-	_ASSERT_EXPR(windowCreated, TEXT("Failed to initialise window."));
+	RenWindow* window = CreateWin<RenWindow>(1024, 768, TEXT("Ren"));
+	_ASSERT_EXPR(window != nullptr, TEXT("Failed to initialise window."));
 
-	return MessageLoop(mainWindow);
+	return MessageLoop(window);
 }
 
-int MessageLoop(RenWindow* mainWindow)
+int MessageLoop(RenWindow* window)
 {
-	AutoReleaser winReleaser{ mainWindow };
+	AutoReleaser winReleaser{ window };
 
 	HACCEL hAccelTable = LoadAccelerators(GetAppInstance(), MAKEINTRESOURCE(IDC_SOFTWAREREN));
 
-	while (!mainWindow->IsDestroyed())
+	while (!window->IsDestroyed())
 	{
 		MSG msg;
 		while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
@@ -44,7 +43,7 @@ int MessageLoop(RenWindow* mainWindow)
 				return (int)msg.wParam;
 		}
 
-		mainWindow->Tick();
+		window->Tick();
 	}
 
 	return 0;

@@ -6,6 +6,13 @@ namespace
 HINSTANCE g_appInstance = nullptr;
 }
 
+POINT GetWindowClientCenter(HWND hwnd)
+{
+	RECT rect;
+	GetClientRect(hwnd, &rect);
+	return { rect.right / 2, rect.bottom / 2 };
+}
+
 POINT GetMouseCoordinates(HWND hwnd)
 {
 	POINT p;
@@ -22,10 +29,7 @@ POINT GetMouseCoordinates(HWND hwnd)
 
 void CenterCursorPosition(HWND hwnd)
 {
-	RECT rect;
-	GetClientRect(hwnd, &rect);
-
-	POINT point = { rect.right / 2, rect.bottom / 2 };
+	POINT point = GetWindowClientCenter(hwnd);
 
 	ClientToScreen(hwnd, &point);
 	SetCursorPos(point.x, point.y);

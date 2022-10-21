@@ -129,6 +129,7 @@ Vec3df Camera::GetLookDirection() const
 void Camera::LookAt(const Vert3df& at)
 {
 	lookAt = at;
+	lookAt.Normalize();
 
 	auto zAxis = (lookAt - position).Normalize();
 	auto xAxis = up.Cross(zAxis).Normalize();
