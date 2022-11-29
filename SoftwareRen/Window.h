@@ -30,8 +30,8 @@ public:
 
 	virtual void Destroy();
 
-	virtual int AddRef() final;
-	virtual void Release() final;
+	int AddRef() final;
+	void Release() final;
 
 	HWND GetWindowHandle() const;
 

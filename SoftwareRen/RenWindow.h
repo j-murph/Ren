@@ -23,12 +23,12 @@ private:
 	void ToggleViewMode();
 
 protected:
-	virtual LRESULT HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) override;
+	LRESULT HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) override;
 
 public:
 	RenWindow();
 
-	virtual bool Create(int width, int height, LPCTSTR title) override;
+	bool Create(int width, int height, LPCTSTR title) override;
 
-	virtual void Tick() override;
+	void Tick() override;
 };

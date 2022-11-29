@@ -17,7 +17,7 @@ Mat4x4f RenderObject::GetWorldMatrix()
 
 	Mat4x4f rotZMat;
 	rotZMat.Identity();
-	rotZMat.SetRotationY(rotation.z);
+	rotZMat.SetRotationZ(rotation.z);
 
 	Mat4x4f tranMatrix;
 	tranMatrix.Identity();

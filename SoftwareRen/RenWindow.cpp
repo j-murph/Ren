@@ -5,7 +5,7 @@
 RenWindow::RenWindow() :
 	pRasterizer(std::make_unique<Rasterizer>()),
 	pSceneRenderer(std::make_unique<SceneRenderer>(pRasterizer.get())),
-	handleMouseInput(false)
+	handleMouseInput(true)
 {
 }
 
@@ -57,7 +57,7 @@ void RenWindow::Tick()
 
 		cubeMesh.CreateCube(.5);
 		objMesh.SetPosition({ 0, 0, 0 });
-		cubeMesh.SetPosition({ 0, 0, 0 });
+		cubeMesh.SetPosition({ 0, -1, 0 });
 		pSceneRenderer->AddObjectToScene(&cubeMesh);
 		pSceneRenderer->AddObjectToScene(&objMesh);
 
@@ -86,8 +86,7 @@ void RenWindow::Tick()
 
 		static float inc = 0.0f;
 		inc += 0.65f * g_Timer.GetLockedTime();
-		objMesh.SetRotation({ inc / 2.5f, inc / 2, inc });
-		cubeMesh.SetPosition({ 0, -1, 0 });
+		cubeMesh.SetRotation({ inc / .8f, -inc, inc / 1.2f });
 
 		// Start record of the most recent render
 		g_Timer.Reset();
@@ -103,6 +102,10 @@ LRESULT RenWindow::HandleMessage(UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	break;
+	case WM_CREATE:
+		ShowCursor(false);
+		CenterCursorPosition(GetWindowHandle());
+		break;
 	case WM_PAINT:
 		HandlePaint();
 		break;
@@ -187,6 +190,7 @@ void RenWindow::UpdateCamera()
 	if (keyDown('W'))
 	{
 		mainCamera.Move(MoveDirection::FORWARD, speed);
+		
 	}
 
 	// Backward
@@ -226,16 +230,14 @@ void RenWindow::UpdateCamera()
 		RECT rect;
 		GetClientRect(hwnd, &rect);
 
-		POINT screenCenter = { rect.right / 2, rect.bottom / 2 };
+		POINT screenCenter = GetWindowClientCenter(hwnd);
 		POINT cursorPos = GetMouseCoordinates(GetWindowHandle());
 
 		bool mouseHasMoved = cursorPos.x != screenCenter.x || cursorPos.y != screenCenter.y;
 		if (mouseHasMoved)
 		{
 			Vec2df vecDirection{ static_cast<float>(cursorPos.x - screenCenter.x), static_cast<float>(cursorPos.y - screenCenter.y) };
-			Mat4x4f rotX{};
-
-			//mainCamera.GetRotationX
+			mainCamera.RotateVertical(-Deg2Rad(vecDirection.x) / 10.0f);
 			CenterCursorPosition(hwnd);
 		}
 	}
@@ -279,7 +281,7 @@ void RenWindow::HandleKeyDown(WPARAM wParam)
 	case 'N':
 		pSrgc->options.drawNormals = !pSrgc->options.drawNormals;
 		break;
-	case 'M':
+	case 'E':
 		handleMouseInput = !handleMouseInput;
 		ShowCursor(!handleMouseInput);
 		if (handleMouseInput)

@@ -36,6 +36,9 @@ public:
 	const Mat4x4f& GetViewMatrix();
 	const Mat4x4f& GetProjectionMatrix();
 
+	void RotateVertical(float radians);
+	void RotateHorizontal(float radians);
+
 	void SetPosition(const Vert3df& position);
 	const Vert3df& GetPosition();
 
@@ -65,6 +68,8 @@ public:
 
 	Vec3df GetLookDirection() const;
 	void LookAt(const Vert3df& at);
+
+	Vec3df GetLookAt() { return lookAt; }
 
 	void Move(MoveDirection direction, float units);
 };

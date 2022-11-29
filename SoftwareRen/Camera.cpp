@@ -19,6 +19,24 @@ const Mat4x4f& Camera::GetProjectionMatrix()
 	return projectionMatrix;
 }
 
+void Camera::RotateVertical(float radians)
+{
+	Mat4x4f rotY;
+	rotY.Identity();
+	rotY.SetRotationY(radians);
+	viewMatrix = viewMatrix * rotY;
+	lookAt = GetPosition() + GetLookDirection();
+}
+
+void Camera::RotateHorizontal(float radians)
+{
+	Mat4x4f rot;
+	rot.Identity();
+	rot.SetRotationY(radians);
+	viewMatrix = viewMatrix * rot;
+	lookAt = GetPosition() + GetLookDirection();
+}
+
 void Camera::SetPosition(const Vert3df& position)
 {
 	Vec3df diff = this->position - position;
@@ -120,7 +138,7 @@ Vec3df Camera::GetLookDirection() const
 {
 	return
 	{
-		viewMatrix.a[2][0],
+		-viewMatrix.a[2][0],
 		viewMatrix.a[2][1],
 		viewMatrix.a[2][2]
 	};
@@ -129,7 +147,6 @@ Vec3df Camera::GetLookDirection() const
 void Camera::LookAt(const Vert3df& at)
 {
 	lookAt = at;
-	lookAt.Normalize();
 
 	auto zAxis = (lookAt - position).Normalize();
 	auto xAxis = up.Cross(zAxis).Normalize();

@@ -18,19 +18,12 @@ POINT GetMouseCoordinates(HWND hwnd)
 	POINT p;
 	GetCursorPos(&p);
 	ScreenToClient(hwnd, &p);
-
-	RECT clientRect;
-	GetClientRect(hwnd, &clientRect);
-
-	p.y = clientRect.bottom - p.y;
-
 	return p;
 }
 
 void CenterCursorPosition(HWND hwnd)
 {
 	POINT point = GetWindowClientCenter(hwnd);
-
 	ClientToScreen(hwnd, &point);
 	SetCursorPos(point.x, point.y);
 }
