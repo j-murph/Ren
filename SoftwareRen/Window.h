@@ -21,13 +21,13 @@ protected:
 	Window() = default;
 	virtual ~Window();
 
+	virtual bool Create(int width, int height, LPCTSTR title);
+
 	virtual ATOM GetWindowClassAtom();
 
 	virtual LRESULT HandleMessage(UINT message, WPARAM wParam, LPARAM lParam) = 0;
 
 public:
-	virtual bool Create(int width, int height, LPCTSTR title);
-
 	virtual void Destroy();
 
 	int AddRef() final;
@@ -41,7 +41,7 @@ public:
 template <class T, typename ...A>
 T* CreateWin(A&& ...args)
 {
-	T* window = new T();
+	auto window = new T();
 	if (!window->Create(std::forward<A>(args)...))
 	{
 		// No need to Release() window

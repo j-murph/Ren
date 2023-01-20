@@ -10,21 +10,19 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
-	SetAppInstance(hInstance);
 	AllocDebugConsole();
-
-	std::shared_ptr<int> p = std::make_shared<int>(5);
-	auto gg = p;
+	SetAppInstance(hInstance);
 
 	RenWindow* window = CreateWin<RenWindow>(1024, 768, TEXT("Ren"));
 	_ASSERT_EXPR(window != nullptr, TEXT("Failed to initialise window."));
 
-	return MessageLoop(window);
+	auto returnCode = MessageLoop(window);
+	return returnCode;
 }
 
 int MessageLoop(RenWindow* window)
 {
-	AutoReleaser winReleaser{ window };
+	AutoReleaser winReleaser{window};
 
 	HACCEL hAccelTable = LoadAccelerators(GetAppInstance(), MAKEINTRESOURCE(IDC_SOFTWAREREN));
 

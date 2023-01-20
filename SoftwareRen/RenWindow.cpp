@@ -38,12 +38,9 @@ bool RenWindow::Create(int width, int height, LPCTSTR title)
 
 void RenWindow::Tick()
 {
-	static Mesh objMesh, cubeMesh;
-	
-	static bool loaded = false;
-	if (!loaded)
+	if (!assetsLoaded)
 	{
-		loaded = true;
+		assetsLoaded = true;
 
 		bool meshLoaded;
 		const float loadTime = BenchmarkFunction([&]()

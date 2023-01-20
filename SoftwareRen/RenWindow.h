@@ -9,7 +9,10 @@ private:
 	std::unique_ptr<Rasterizer> pRasterizer;
 	std::unique_ptr<SceneRenderer> pSceneRenderer;
 
+	bool assetsLoaded = false;
+
 	Camera mainCamera;
+	Mesh objMesh, cubeMesh;
 
 	bool handleMouseInput;
 
