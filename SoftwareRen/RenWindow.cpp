@@ -139,7 +139,7 @@ void RenWindow::HandlePaint()
 	const Vert3df& lookAt = mainCamera.GetLookDirection();
 
 	wchar_t szCameraPos[255] = { 0 };
-	int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
+	const int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
 		cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
 	SetTextColor(memDc, 0x00FFFFFF);
@@ -161,7 +161,7 @@ void RenWindow::HandleWindowResize(LPARAM lParam, WPARAM wParam)
 		RECT clientRect;
 		GetClientRect(GetWindowHandle(), &clientRect);
 
-		bool resizeSuccess = pSrgc->frameBuffer->SetSize(clientRect.right, clientRect.bottom);
+		const bool resizeSuccess = pSrgc->frameBuffer->SetSize(clientRect.right, clientRect.bottom);
 		_ASSERT(resizeSuccess);
 		pSrgc->zBuffer->SetSize(clientRect.right, clientRect.bottom);
 
@@ -230,7 +230,7 @@ void RenWindow::UpdateCamera()
 		POINT screenCenter = GetWindowClientCenter(hwnd);
 		POINT cursorPos = GetMouseCoordinates(GetWindowHandle());
 
-		bool mouseHasMoved = cursorPos.x != screenCenter.x || cursorPos.y != screenCenter.y;
+		const bool mouseHasMoved = cursorPos.x != screenCenter.x || cursorPos.y != screenCenter.y;
 		if (mouseHasMoved)
 		{
 			Vec2df vecDirection{ static_cast<float>(cursorPos.x - screenCenter.x), static_cast<float>(cursorPos.y - screenCenter.y) };
