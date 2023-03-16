@@ -4,8 +4,7 @@
 
 RenWindow::RenWindow() :
 	pRasterizer(std::make_unique<Rasterizer>()),
-	pSceneRenderer(std::make_unique<SceneRenderer>(pRasterizer.get())),
-	handleMouseInput(true)
+	pSceneRenderer(std::make_unique<SceneRenderer>(pRasterizer.get()))
 {
 }
 
@@ -138,8 +137,8 @@ void RenWindow::HandlePaint()
 	const Vert3df& cameraPos = mainCamera.GetPosition();
 	const Vert3df& lookAt = mainCamera.GetLookDirection();
 
-	wchar_t szCameraPos[255] = { 0 };
-	const int characterCount = swprintf_s(szCameraPos, 255, L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f",
+	wchar_t szCameraPos[1024] = { 0 };
+	const int characterCount = swprintf_s(szCameraPos, sizeof(szCameraPos) / sizeof(szCameraPos[0]), L"Camera Position: %f %f %f\nCamera Look Direction: %f %f %f\nMovement: W,A,S,D\nToggle Culling: C\nView Mode: V\nShow Normals: N",
 		cameraPos.x, cameraPos.y, cameraPos.z, lookAt.x, lookAt.y, lookAt.z);
 
 	SetTextColor(memDc, 0x00FFFFFF);
@@ -220,7 +219,6 @@ void RenWindow::UpdateCamera()
 		mainCamera.Move(MoveDirection::DOWN, speed);
 	}
 
-	// TODO: Handle mouse movement
 	if (handleMouseInput)
 	{
 		HWND hwnd = GetWindowHandle();
@@ -242,12 +240,10 @@ void RenWindow::UpdateCamera()
 
 void RenWindow::UpdateTitle(int currentFps)
 {
-	static Timer lastUpdate;
-
 	// Only update at 1hz
-	if (lastUpdate.Elapsed() >= 1.0f)
+	if (titleUpdateTimer.Elapsed() >= 1.0f)
 	{
-		lastUpdate.Reset();
+		titleUpdateTimer.Reset();
 
 		WCHAR title[256] = { 0 };
 		swprintf_s(title, 256, TEXT("%s - %i FPS"), TEXT("Ren"), currentFps);

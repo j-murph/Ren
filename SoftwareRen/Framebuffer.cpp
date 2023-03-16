@@ -46,10 +46,9 @@ void FrameBuffer::Clear(const Color& color)
 
 	// TODO: Optimize this
 	int iterationCount = width * height;
-	while (iterationCount != 0)
+	while (iterationCount-- != 0)
 	{
 		*currentPixel++ = dwordColor;
-		iterationCount--;
 	}
 }
 

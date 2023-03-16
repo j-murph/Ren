@@ -15,7 +15,7 @@ private:
 
 	static LRESULT CALLBACK DefaultWndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-	static inline DefaultWindowsClassRegistrar defaultRegistrar{ Window::DefaultWndProc };
+	static inline DefaultWindowsClassRegistrar defaultRegistrar{Window::DefaultWndProc};
 
 protected:
 	Window() = default;

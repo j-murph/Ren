@@ -16,7 +16,8 @@ int APIENTRY wWinMain(HINSTANCE hInstance,
 	RenWindow* window = CreateWin<RenWindow>(1024, 768, TEXT("Ren"));
 	_ASSERT_EXPR(window != nullptr, TEXT("Failed to initialise window."));
 
-	auto returnCode = MessageLoop(window);
+	const int returnCode = MessageLoop(window);
+
 	return returnCode;
 }
 
