@@ -121,11 +121,9 @@ struct Vertex4d
 
 	void DivideByW()
 	{
-		T inverseW = w;
-		if (inverseW != static_cast<T>(0))
+		if (w != static_cast<T>(0))
 		{
-			inverseW = 1 / w;
-
+			T inverseW = 1 / w;
 			x *= inverseW;
 			y *= inverseW;
 			z *= inverseW;
@@ -214,11 +212,10 @@ struct Vector2d
 
 	Vector2d<T>& Normalize()
 	{
-		T inverseLength = Length();
-		if (inverseLength != static_cast<T>(0))
+		T length = Length();
+		if (length != static_cast<T>(0))
 		{
-			inverseLength = 1 / inverseLength;
-
+			T inverseLength = 1 / inverseLength;
 			x *= inverseLength;
 			y *= inverseLength;
 		}
@@ -285,11 +282,10 @@ struct Vector3d
 
 	Vector3d<T>& Normalize()
 	{
-		T inverseLength = Length();
-		if (inverseLength != static_cast<T>(0))
+		T length = Length();
+		if (length != static_cast<T>(0))
 		{
-			inverseLength = 1 / inverseLength;
-
+			T inverseLength = 1 / inverseLength;
 			x *= inverseLength;
 			y *= inverseLength;
 			z *= inverseLength;
