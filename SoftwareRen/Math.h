@@ -285,7 +285,7 @@ struct Vector3d
 		T length = Length();
 		if (length != static_cast<T>(0))
 		{
-			T inverseLength = 1 / inverseLength;
+			T inverseLength = 1 / length;
 			x *= inverseLength;
 			y *= inverseLength;
 			z *= inverseLength;
