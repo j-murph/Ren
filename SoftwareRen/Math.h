@@ -347,19 +347,14 @@ struct Matrix4x4
 
 	Matrix4x4() = default;
 
-	Matrix4x4(const Matrix4x4<T>& other)
-	{
-		memcpy(a, other.a, sizeof(f));
-	}
-
 	Matrix4x4(const T elements[16])
 	{
-		memcpy(a, elements, sizeof(f));
+		memcpy(f, elements, sizeof(f));
 	}
 
 	void Zero()
 	{
-		memset(a, 0, sizeof(f));
+		memset(f, 0, sizeof(f));
 	}
 
 	void Identity()

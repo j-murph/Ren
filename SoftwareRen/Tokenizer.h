@@ -11,6 +11,8 @@ private:
 
 	std::vector<std::string> tokens;
 
+	std::stringstream ss;
+
 	bool enableParserThrow;
 
 public:
@@ -25,7 +27,8 @@ public:
 
 	void TokenizeString(const std::string& str, delimiterT delimiter)
 	{
-		std::stringstream ss;
+		ss.clear();
+
 		ss << str;
 
 		std::string token;
@@ -38,14 +41,15 @@ public:
 	template <class T>
 	T ParseToken(size_t tokenIndex)
 	{
+		T temp{};
+
 		if (tokenIndex >= tokens.size())
 		{
 			ThrowParserExceptionIfEnabled<std::out_of_range>("Index out of range.");
-			return T{};
+			return temp;
 		}
 
-		T temp;
-		std::stringstream ss;
+		ss.clear();
 		ss << tokens[tokenIndex];
 		ss >> temp;
 
