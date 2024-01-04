@@ -24,7 +24,7 @@ void Camera::RotateVertical(float radians)
 	Mat4x4f rotY;
 	rotY.Identity();
 	rotY.SetRotationY(radians);
-	viewMatrix = viewMatrix * rotY;
+	viewMatrix = rotY * viewMatrix;
 	lookAt = GetPosition() + GetLookDirection();
 }
 
@@ -33,7 +33,7 @@ void Camera::RotateHorizontal(float radians)
 	Mat4x4f rot;
 	rot.Identity();
 	rot.SetRotationY(radians);
-	viewMatrix = viewMatrix * rot;
+	viewMatrix = rot * viewMatrix;
 	lookAt = GetPosition() + GetLookDirection();
 }
 

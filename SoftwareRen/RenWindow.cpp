@@ -83,6 +83,7 @@ void RenWindow::Tick()
 		static float inc = 0.0f;
 		inc += 0.65f * g_Timer.GetLockedTime();
 		cubeMesh.SetRotation({ inc / .8f, -inc, inc / 1.2f });
+		cubeMesh.SetPosition({ 0, inc / 5, inc / 5 });
 
 		// Start record of the most recent render
 		g_Timer.Reset();

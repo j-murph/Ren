@@ -43,7 +43,7 @@ Rasterizer* SceneRenderer::GetRasterizer()
 void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 {
 	const Mat4x4f& worldMatrix = mesh.GetWorldMatrix();
-	const Mat4x4f& vp = camera->GetViewMatrix() * camera->GetProjectionMatrix();
+	const Mat4x4f& pvMat = camera->GetProjectionMatrix() * camera->GetViewMatrix();
 
 	const Vert3df& cameraPos = camera->GetPosition();
 
@@ -59,7 +59,7 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 
 		if (gfx.options.cullBackfaces)
 		{
-			Tri3df worldTri = { p1c.x, p1c.y, p1c.z, p2c.x, p2c.y, p2c.z, p3c.x, p3c.y, p3c.z };
+			const Tri3df worldTri = { p1c.x, p1c.y, p1c.z, p2c.x, p2c.y, p2c.z, p3c.x, p3c.y, p3c.z };
 			Vec3df vecCamToTri = worldTri.GetCenter() - cameraPos;
 
 			if (vecCamToTri.Dot(worldTri.GetNormal()) >= 0.f)
@@ -68,9 +68,9 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 			}
 		}
 
-		p1c = vp * p1c;
-		p2c = vp * p2c;
-		p3c = vp * p3c;
+		p1c = pvMat * p1c;
+		p2c = pvMat * p2c;
+		p3c = pvMat * p3c;
 		
 		p1c.DivideByW();
 		p2c.DivideByW();
@@ -119,14 +119,12 @@ void SceneRenderer::DebugDrawNormal(const Tri3df& tri, const Mat4x4f& worldMatri
 
 void SceneRenderer::DebugDrawLine(const Vert3df& p1, const Vert3df& p2, const SRGraphicsContext& gfx)
 {
-	const Mat4x4f& viewMatrix = camera->GetViewMatrix();
-	const Mat4x4f& projectionMatrix = camera->GetProjectionMatrix();
-	const Mat4x4f& vp = viewMatrix * projectionMatrix;
+	const Mat4x4f& pvMat = camera->GetProjectionMatrix() *camera->GetViewMatrix();
 
 	const float halfViewportWidth = static_cast<float>(gfx.frameBuffer->GetWidth()) / 2.0f;
 	const float halfViewportHeight = static_cast<float>(gfx.frameBuffer->GetHeight()) / 2.0f;
 
-	Vert4df p1c = vp * Vert4df(p1, 1), p2c = vp * Vert4df(p2, 1);
+	Vert4df p1c = pvMat * Vert4df(p1, 1), p2c = pvMat * Vert4df(p2, 1);
 
 	p1c.DivideByW();
 	p2c.DivideByW();
