@@ -44,7 +44,6 @@ void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 {
 	const Mat4x4f& worldMatrix = mesh.GetWorldMatrix();
 	const Mat4x4f& pvMat = camera->GetProjectionMatrix() * camera->GetViewMatrix();
-
 	const Vert3df& cameraPos = camera->GetPosition();
 
 	const float halfViewportWidth = static_cast<float>(gfx.frameBuffer->GetWidth()) / 2.0f;
