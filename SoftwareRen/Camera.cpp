@@ -24,7 +24,7 @@ void Camera::RotateVertical(float radians)
 	Mat4x4f rotY;
 	rotY.Identity();
 	rotY.SetRotationY(radians);
-	viewMatrix = viewMatrix * rotY;
+	viewMatrix = rotY * viewMatrix;
 	lookAt = GetPosition() + GetLookDirection();
 }
 
@@ -138,7 +138,7 @@ Vec3df Camera::GetLookDirection() const
 {
 	return
 	{
-		-viewMatrix.a[2][0],
+		viewMatrix.a[2][0],
 		viewMatrix.a[2][1],
 		viewMatrix.a[2][2]
 	};
@@ -153,20 +153,20 @@ void Camera::LookAt(const Vert3df& at)
 	auto yAxis = zAxis.Cross(xAxis);
 
 	viewMatrix(0, 0) = xAxis.x;
-	viewMatrix(0, 1) = yAxis.x;
-	viewMatrix(0, 2) = zAxis.x;
-	viewMatrix(0, 3) = 0.0f;
-	viewMatrix(1, 0) = xAxis.y;
+	viewMatrix(1, 0) = yAxis.x;
+	viewMatrix(2, 0) = zAxis.x;
+	viewMatrix(3, 0) = 0.0f;
+	viewMatrix(0, 1) = xAxis.y;
 	viewMatrix(1, 1) = yAxis.y;
-	viewMatrix(1, 2) = zAxis.y;
-	viewMatrix(1, 3) = 0.0f;
-	viewMatrix(2, 0) = xAxis.z;
-	viewMatrix(2, 1) = yAxis.z;
+	viewMatrix(2, 1) = zAxis.y;
+	viewMatrix(3, 1) = 0.0f;
+	viewMatrix(0, 2) = xAxis.z;
+	viewMatrix(1, 2) = yAxis.z;
 	viewMatrix(2, 2) = zAxis.z;
-	viewMatrix(2, 3) = 0.0f;
-	viewMatrix(3, 0) = -xAxis.Dot(position);
-	viewMatrix(3, 1) = -yAxis.Dot(position);
-	viewMatrix(3, 2) = -zAxis.Dot(position);
+	viewMatrix(3, 2) = 0.0f;
+	viewMatrix(0, 3) = -xAxis.Dot(position);
+	viewMatrix(1, 3) = -yAxis.Dot(position);
+	viewMatrix(2, 3) = -zAxis.Dot(position);
 	viewMatrix(3, 3) = 1.0f;
 }
 
@@ -180,8 +180,8 @@ void Camera::UpdateProjectionMatrix()
 	projectionMatrix(0, 0) = 1.0f / (tanHalfFOV * aspectRatio);
 	projectionMatrix(1, 1) = 1.0f / tanHalfFOV;
 	projectionMatrix(2, 2) = (-nearPlane - farPlane) / zRange;
-	projectionMatrix(2, 3) = 1;
-	projectionMatrix(3, 2) = (2 * nearPlane * farPlane) / zRange;
+	projectionMatrix(2, 3) = (2 * nearPlane * farPlane) / zRange;
+	projectionMatrix(3, 2) = 1;
 }
 
 void Camera::Move(MoveDirection direction, float units)

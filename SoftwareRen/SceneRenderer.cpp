@@ -43,7 +43,7 @@ Rasterizer* SceneRenderer::GetRasterizer()
 void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 {
 	const Mat4x4f& worldMatrix = mesh.GetWorldMatrix();
-	const Mat4x4f& vp = camera->GetViewMatrix() * camera->GetProjectionMatrix();
+	const Mat4x4f& vp = camera->GetProjectionMatrix() * camera->GetViewMatrix();
 
 	const Vert3df& cameraPos = camera->GetPosition();
 
