@@ -527,12 +527,6 @@ struct Matrix4x4
 		return temp;
 	}
 
-	Matrix4x4<T>& operator=(const Matrix4x4<T>& other)
-	{
-		memcpy(a, other.a, sizeof(a));
-		return *this;
-	}
-
 	Matrix4x4<T>& operator*=(const Matrix4x4<T>& other)
 	{
 		return *this = *this * other;
