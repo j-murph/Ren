@@ -23,7 +23,7 @@ Mat4x4f RenderObject::GetWorldMatrix()
 	tranMatrix.Identity();
 	tranMatrix.SetTranslation(position);
 
-	return tranMatrix * rotXMat * rotYMat * rotZMat;
+	return rotXMat * rotYMat * rotZMat * tranMatrix;
 }
 
 void RenderObject::SetPosition(const Vert3df& pos)

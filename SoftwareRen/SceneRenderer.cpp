@@ -43,7 +43,7 @@ Rasterizer* SceneRenderer::GetRasterizer()
 void SceneRenderer::DrawMesh(Mesh& mesh, const SRGraphicsContext& gfx)
 {
 	const Mat4x4f& worldMatrix = mesh.GetWorldMatrix();
-	const Mat4x4f& vp = camera->GetProjectionMatrix() * camera->GetViewMatrix();
+	const Mat4x4f& vp = camera->GetViewMatrix() * camera->GetProjectionMatrix();
 
 	const Vert3df& cameraPos = camera->GetPosition();
 
@@ -119,7 +119,7 @@ void SceneRenderer::DebugDrawNormal(const Tri3df& tri, const Mat4x4f& worldMatri
 
 void SceneRenderer::DebugDrawLine(const Vert3df& p1, const Vert3df& p2, const SRGraphicsContext& gfx)
 {
-	const Mat4x4f& vp = camera->GetProjectionMatrix() * camera->GetViewMatrix();
+	const Mat4x4f& vp = camera->GetViewMatrix() * camera->GetProjectionMatrix();
 
 	const float halfViewportWidth = static_cast<float>(gfx.frameBuffer->GetWidth()) / 2.0f;
 	const float halfViewportHeight = static_cast<float>(gfx.frameBuffer->GetHeight()) / 2.0f;

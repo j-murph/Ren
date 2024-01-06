@@ -368,9 +368,9 @@ struct Matrix4x4
 
 	Matrix4x4<T>& SetTranslation(const Vertex3d<T>& position)
 	{
-		a[0][3] = position.x;
-		a[1][3] = position.y;
-		a[2][3] = position.z;
+		a[3][0] = position.x;
+		a[3][1] = position.y;
+		a[3][2] = position.z;
 
 		return *this;
 	}
@@ -520,10 +520,10 @@ struct Matrix4x4
 	Vertex4d<T> operator*(const Vertex4d<T>& vert) const
 	{
 		Vertex4d<T> temp;
-		temp.x = (a[0][0] * vert.x) + (a[0][1] * vert.y) + (a[0][2] * vert.z) + (a[0][3] * vert.w);
-		temp.y = (a[1][0] * vert.x) + (a[1][1] * vert.y) + (a[1][2] * vert.z) + (a[1][3] * vert.w);
-		temp.z = (a[2][0] * vert.x) + (a[2][1] * vert.y) + (a[2][2] * vert.z) + (a[2][3] * vert.w);
-		temp.w = (a[3][0] * vert.x) + (a[3][1] * vert.y) + (a[3][2] * vert.z) + (a[3][3] * vert.w);
+		temp.x = (a[0][0] * vert.x) + (a[1][0] * vert.y) + (a[2][0] * vert.z) + (a[3][0] * vert.w);
+		temp.y = (a[0][1] * vert.x) + (a[1][1] * vert.y) + (a[2][1] * vert.z) + (a[3][1] * vert.w);
+		temp.z = (a[0][2] * vert.x) + (a[1][2] * vert.y) + (a[2][2] * vert.z) + (a[3][2] * vert.w);
+		temp.w = (a[0][3] * vert.x) + (a[1][3] * vert.y) + (a[2][3] * vert.z) + (a[3][3] * vert.w);
 		return temp;
 	}
 

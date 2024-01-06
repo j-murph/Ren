@@ -53,7 +53,7 @@ void RenWindow::Tick()
 
 		cubeMesh.CreateCube(.5);
 		objMesh.SetPosition({ 0, 0, 0 });
-		cubeMesh.SetPosition({ 0, -1, 0 });
+		cubeMesh.SetPosition({ 0, -1.25, 0 });
 		pSceneRenderer->AddObjectToScene(&cubeMesh);
 		pSceneRenderer->AddObjectToScene(&objMesh);
 
@@ -232,7 +232,7 @@ void RenWindow::UpdateCamera()
 		if (mouseHasMoved)
 		{
 			Vec2df vecDirection{ static_cast<float>(cursorPos.x - screenCenter.x), static_cast<float>(cursorPos.y - screenCenter.y) };
-			mainCamera.RotateVertical(-Deg2Rad(vecDirection.x) / 10.0f);
+			mainCamera.RotateVertical(Deg2Rad(vecDirection.x) / 10.0f);
 			CenterCursorPosition(hwnd);
 		}
 	}
